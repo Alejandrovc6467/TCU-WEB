@@ -21,7 +21,7 @@ include('public/header.php');
       <thead>
         <tr>
           <th>Acciones</th>
-          <th>Nombre completo</th>
+          <th>Nombre</th>
           <th>Correo</th>
           <th>Contraseña</th>
         </tr>

@@ -47,6 +47,8 @@ if (session_status() == PHP_SESSION_NONE) {
                   <a href="?controlador=Usuarios&accion=mostrar"> • Usuarios</a>
                 <?php endif; ?>
               </div>
+
+              <hr>
                
               <button class="btnCerrarSesion" onclick="cerrarSesion()"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</button>
             </div>

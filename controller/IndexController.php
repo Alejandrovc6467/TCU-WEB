@@ -64,12 +64,14 @@ class IndexController
                 session_start(); 
 
                 foreach ($roles as $value) {
-                    $nombre = $value[0];
-                    $correo = $value[1];
-                    $rol = $value[2];
+                    $id = $value[0];
+                    $nombre = $value[1];
+                    $correo = $value[2];
+                    $rol = $value[3];
                    
                 }
 
+                $_SESSION['id'] = $id;
                 $_SESSION['nombre'] = $nombre;
                 $_SESSION['correo'] = $correo;
                 $_SESSION['rol'] = $rol;
