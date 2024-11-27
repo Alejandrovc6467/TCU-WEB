@@ -1,0 +1,80 @@
+
+
+.usuarios_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+    /*---------- table usuarios registrados ------------*/
+    
+    .header_fixed {
+        max-height: 450px;
+        width: 90%;
+        overflow: auto;
+        border-radius: 20px;
+        border: 1px solid #dedede;
+
+        
+        margin-bottom: 100px;
+    
+    }
+
+    .header_fixed table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .header_fixed thead {
+        position: sticky;
+        z-index: 1;
+        top: 0;
+        background-color: rgb(253, 253, 253);
+        color: #e6e7e8;
+        font-size: 15px;
+        border-bottom: 1px solid #dedede;
+   
+      
+    }
+
+    /*las tres primeras de arriba son las configuraciones necesarias para fijas la thead del table, lo demas de abjo en disenio*/
+
+
+    .header_fixed tr:nth-child(even) {
+        background-color: #ececec62;   
+    }
+
+    .header_fixed tr{
+        color: rgb(143, 143, 143);
+    }
+
+    .header_fixed th{
+        color: rgb(86, 86, 86);
+        padding: 20px 15px;
+    }
+
+    .header_fixed td{
+        padding: 15px;   
+    }
+
+
+    .header_fixed select{
+        border-radius: 15px;
+        border: 1px solid rgb(143, 143, 143);
+        padding: 2px 5px;
+        color: rgb(143, 143, 143);
+        cursor: pointer;
+    }
+
+
+    /* Estilo del scroll vertical */
+    .header_fixed::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    .header_fixed::-webkit-scrollbar-thumb {
+        background-color: rgba(45, 45, 45, 0.433); /* Color del scroll (negro con transparencia) */
+        border-radius: 10px; /* Borde redondeado del scroll */
+    }

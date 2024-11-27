@@ -1,0 +1,52 @@
+
+.inicio{
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.inicio-title-section{
+    background-color: var(--colorPrimario);
+    padding: 30px 0px;
+    text-align: center;
+    color: white;
+}
+
+.inicio-title-section p{
+   font-size: 1.2rem;
+   line-height: 0.4; /* Ajusta según el espaciado deseado */
+}
+
+.inicio img{
+    width: 100%;
+    margin-top: -17px;
+    padding: 0px;
+}
+
+.title-actividades{
+    margin-bottom: var(--marginbottomtitulo);
+    color: var(--titulo);
+    text-align: center;
+    margin: 50px 0 20px 0px;
+}
+
+.title-actividades-texto{
+    color: var(--colortexto);
+    text-align: center;
+}
+
+
+
+
+@media all and (max-width:700px){
+   
+    .inicio-title-section p{
+        padding: 0 30px;
+        font-size: 0.8rem;
+        line-height: 1; /* Ajusta según el espaciado deseado */
+     }
+     
+}
+
+
+

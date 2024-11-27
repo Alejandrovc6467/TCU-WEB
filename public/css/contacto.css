@@ -1,0 +1,12 @@
+
+.contacto-title{
+    color: var(--titulo);
+    text-align: center;
+    padding-top: 50px;
+}
+
+.contacto-title-text{
+    color: var(--colortexto);
+    text-align: center;
+   
+}

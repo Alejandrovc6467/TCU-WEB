@@ -1,0 +1,46 @@
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+
+/*editar esto*/
+:root {
+
+  /*colors*/
+  --colorPrimario: #1ea0d4;
+  --titulo: #2980B9;
+  --subtitulo: #477a9c;
+  --tituloformulario: #2691d9;
+  --verdedescargar: #039c00;
+  --colortexto: #7f7f7f;
+  --colorstitulotargetas: #6A6D78;
+  --lineadivisora: rgb(212, 212, 212);
+
+
+  /*margin*/
+  --marginbottomtitulo: 50px;
+  
+
+  /*fonts*/
+  --whiteColor-text:  rgba(240, 248, 255, 0.636);
+  --PT-Sans: 'PT Sans', sans-serif; 
+  --Open-Sans: 'Open Sans', sans-serif; 
+}
+
+
+main{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.section_main{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1920px;
+
+  padding-top: 100px;/*nuevo tcu*/
+}

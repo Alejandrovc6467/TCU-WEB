@@ -1,0 +1,39 @@
+Importante la bd que se encuentra en el archivo "bd.sql" en los porcesos almacenados tiene como parametro
+
+en el DEFINNER a "root" asi debe de estar si la quiero levantar en local
+
+si la quiero levantar en la bd de la ucr debe de ir el nombre de usuario "congresedimentos"
+
+Ejemplo:
+
+// asi deben de ir todos si la quiero leventar en local
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ActualizarRolUsuario` (IN `p_email` VARCHAR(255), IN `p_rol` VARCHAR(255))  BEGIN
+    UPDATE usuarios
+    SET rol = p_rol
+    WHERE email = p_email;
+END$$
+
+
+
+
+// asi deben de ir todos si la quiero leventar en la bd de la UCR
+
+CREATE DEFINER=`congresedimentos`@`localhost` PROCEDURE `ActualizarRolUsuario` (IN `p_email` VARCHAR(255), IN `p_rol` VARCHAR(255))  BEGIN
+    UPDATE usuarios
+    SET rol = p_rol
+    WHERE email = p_email;
+END$$
+
+
+NOTA: Los procesos se exportaron asi sin el "DELIMITER $$", para yo agregar un proceso de almacenado uno por uno escrito manualmente
+debeo de tomar ese codigo del sp y agragarle los "DELIMITER $$" como aqui abajo Ejemplo:
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ActualizarRolUsuario`(IN `p_email` VARCHAR(255), IN `p_rol` VARCHAR(255))
+BEGIN
+    UPDATE usuarios
+    SET rol = p_rol
+    WHERE email = p_email;
+END$$
+DELIMITER ;
