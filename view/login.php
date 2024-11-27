@@ -40,7 +40,7 @@
     </div>
     
     <input type="submit" value="Ingresar">
-    <div class="signup_link"> Comunícate con el profesor si tienes algún problema </div>
+    <div class="signup_link"> Comunícate con el profesor si tienes algún problema. </div>
   </form>
 
   </div>

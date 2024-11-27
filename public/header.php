@@ -10,8 +10,8 @@
 	<link rel="icon" type="image/x-icon" href="public/assets/logo.webp">
 
 	<!--Style-->
-	<link rel="stylesheet" href="public/css/base.css?111">
-	<link rel="stylesheet" href="public/css/header.css?123">
+	<link rel="stylesheet" href="public/css/base.css?1">
+	<link rel="stylesheet" href="public/css/header.css?14">
 	<link rel="stylesheet" href="public/css/footer.css?15454">
 	<link rel="stylesheet" href="public/css/inicio.css?6">
 	<link rel="stylesheet" href="public/css/sobreNosotros.css?787">

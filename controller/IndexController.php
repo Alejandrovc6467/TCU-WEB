@@ -105,7 +105,7 @@ class IndexController
 
         // Redirige al usuario a la página de inicio de sesión
         //return $this->view->show("login.php");
-        header('Location: ?controlador=Index&accion=mostrar');
+        header('Location: ?controlador=Index&accion=mostrarlogin');
         exit;
 
     }

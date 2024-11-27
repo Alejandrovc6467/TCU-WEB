@@ -1,8 +1,7 @@
-
 <?php
 // Iniciar sesión si no está iniciada
 if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 ?>
 
@@ -12,6 +11,7 @@ if (session_status() == PHP_SESSION_NONE) {
     <img src="public/assets/logo.webp" alt="Logo">
   </div>
   <div class="navbar-links" id="navbar-links">
+
     <li class="navbar-item"><a href="?controlador=Index&accion=mostrar">Inicio</a></li>
     <li class="navbar-item"><a href="?controlador=Index&accion=mostrarSobreNosotros">Sobre nosotros</a></li>
     <li class="navbar-item"><a href="?controlador=Index&accion=mostarContacto">Contacto</a></li>
@@ -19,15 +19,43 @@ if (session_status() == PHP_SESSION_NONE) {
     <?php if (!isset($_SESSION['rol'])): ?>
       <li class="navbar-item"><a href="?controlador=Index&accion=mostrarlogin">Login</a></li>
     <?php else: ?>
-      <li class="navbar-item"><a href="?controlador=Actividades&accion=mostrar">Actividades</a></li>
-      <li class="navbar-item"><a href="?controlador=Proyectos&accion=mostrar">Proyectos</a></li>
-      
-      <?php if ($_SESSION['rol'] == 'admin'): ?>
-        <li class="navbar-item"><a href="?controlador=Usuarios&accion=mostrar">Usuarios</a></li>
-      <?php endif; ?>
-      
-      <li class="navbar-item"><a href="?controlador=Index&accion=cerrarSesion">Cerrar Sesión</a></li>
+
+      <li class="navbar-item">
+        <div class="container_configuracion">
+          <div class="dropdown">
+            <button type="button" class="btn_configuracion" id="dropdownMenuButton"> <i class="fas fa-user"></i> </button>
+            <div class="menu_configuraciones" aria-labelledby="dropdownMenuButton">
+              <div class="infoMenu_container">
+                <i class="fas fa-user fa-lg"></i>
+                <?php
+                    $nombre = $_SESSION['nombre'];
+                    $correo = $_SESSION['correo'];
+                    $rol = ucfirst($_SESSION['rol']);
+                    echo "<p class='nombre_infoMenu'>$nombre</p>";
+                    echo "<p  class='correo_infoMenu'>$correo</p>";
+                ?>
+              </div>
+
+              <hr>
+
+              <div class="menu_opciones">
+
+                <a href="?controlador=Actividades&accion=mostrar"> • Actividades</a>
+                <a href="?controlador=Proyectos&accion=mostrar"> • Proyectos</a>
+                
+                <?php if ($_SESSION['rol'] == 'admin'): ?>
+                  <a href="?controlador=Usuarios&accion=mostrar"> • Usuarios</a>
+                <?php endif; ?>
+              </div>
+               
+              <button class="btnCerrarSesion" onclick="cerrarSesion()"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</button>
+            </div>
+          </div>
+        </div>
+      </li>
+
     <?php endif; ?>
+
   </div>
   <div class="navbar-hamburger" id="navbar-hamburger">
     <div></div>
@@ -38,8 +66,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 
 
-
 <script>
+  //ajustes del menu hamburguesa
   document.addEventListener('DOMContentLoaded', function() {
 
     const navbar = document.getElementById('navbar');
@@ -59,4 +87,25 @@ if (session_status() == PHP_SESSION_NONE) {
     });
         
   });
+</script>
+
+
+<script>
+  //abrir/cerrar ventana de configuraciones por medio de la posicion del mouse
+  document.addEventListener('DOMContentLoaded', function() {
+    const dropdownButton = document.getElementById('dropdownMenuButton');
+    const menu_configuraciones = document.querySelector('.menu_configuraciones');
+
+    dropdownButton.addEventListener('mouseenter', function() {
+      menu_configuraciones.style.display = 'block';
+    });
+
+    document.querySelector('.dropdown').addEventListener('mouseleave', function() {
+      menu_configuraciones.style.display = 'none';
+    });
+  });
+
+  function cerrarSesion() {
+      window.location.href = "?controlador=Index&accion=cerrarSesion";
+  }
 </script>
