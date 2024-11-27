@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="description" content="TCU tc768 sede del atlantico">
-	<meta name="keywords" content="tcu, ucr, sede del atlantico, turrialba, universidad de costa rica">
+	<meta name="keywords" content="tcu, ucr, sede del atlantico, turrialba, universidad de costa rica, Apoyo y Fortalecimiento del sector empresarial del canton de Turrialba, Gestionando tu empresa">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Entorno Desarrollo TC768</title>
 	<link rel="icon" type="image/x-icon" href="public/assets/logo.webp">
@@ -18,9 +18,9 @@
 	<link rel="stylesheet" href="public/css/contacto.css?12">
 	<link rel="stylesheet" href="public/css/login.css?7">
 	<link rel="stylesheet" href="public/css/usuarios.css?2">
+	<link rel="stylesheet" href="public/css/actividades.css?2">
+	<link rel="stylesheet" href="public/css/proyectos.css?2">
 	
-	
-
 	<!--text fonts-->
 	<link href="https://fonts.googleapis.com/css2?family=Anton&family=Days+One&family=Poppins:wght@500;600;900&display=swap" rel="stylesheet">
 
@@ -37,6 +37,7 @@
 
 	<script src="public/js/jquery.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
