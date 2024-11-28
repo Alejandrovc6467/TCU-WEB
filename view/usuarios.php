@@ -7,12 +7,47 @@ include('public/header.php');
 
 <div class="usuarios_container">
 
-  <h1>Usuarios</h1>
+  <h1 class="usuarios_title">Usuarios</h1>
 
 
+  <div class="formulario_container">
 
-  <div class="formulario-container">
-    <p>formulario aqui</p>
+    <form id="agregarDocente">
+
+     
+      <div class="mb-3">
+          <label for="basic-url" class="form-label">Ingrese el nombre</label>
+          <div class="input-group">
+              <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user" style="color: #a3a3a3;"></i></span>
+              <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
+          </div>
+      </div>
+
+
+      <div class="mb-3">
+          <label for="basic-url" class="form-label">Ingrese el correo</label>
+          <div class="input-group">
+              <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user" style="color: #a3a3a3;"></i></span>
+              <input type="text" class="form-control" placeholder="" id="apellido1" aria-label="apellido1" aria-describedby="basic-addon1" required>
+          </div>
+      </div>
+
+      <div class="mb-3">
+          <label for="basic-url" class="form-label">Ingrese la contraseña</label>
+          <div class="input-group">
+              <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user" style="color: #a3a3a3;"></i></span>
+              <input type="text" class="form-control" placeholder="" id="apellido2" aria-label="apellido2" aria-describedby="basic-addon1" required>
+          </div>
+      </div>
+
+
+      <div class="conatainerBotonFormularioModal">
+          <button type="submit" value="Registrar" id="buttonRegistrarUsuario" class="btn btn-primary butonAgregarForm"><i class="fa-solid fa-square-plus" style="color: #ffffff;"></i> Agregar usuario</button>
+      </div>
+
+
+    </form>
+
   </div>
 
   

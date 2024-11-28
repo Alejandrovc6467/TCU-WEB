@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="public/css/sobreNosotros.css?787">
 	<link rel="stylesheet" href="public/css/contacto.css?12">
 	<link rel="stylesheet" href="public/css/login.css?7">
-	<link rel="stylesheet" href="public/css/usuarios.css?2">
+	<link rel="stylesheet" href="public/css/usuarios.css?3">
 	<link rel="stylesheet" href="public/css/actividades.css?2">
 	<link rel="stylesheet" href="public/css/proyectos.css?2">
 	
