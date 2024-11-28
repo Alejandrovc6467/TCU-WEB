@@ -47,7 +47,7 @@ class IndexController
 
         if (isset($_POST['correo'])  &&  isset($_POST['contrasena'])) {
 
-            require 'model/userModel.php';
+            require 'model/LoginModel.php';
             $userModel = new userModel();
 
             $roles = $userModel->login(
