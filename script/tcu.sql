@@ -5,8 +5,6 @@ CREATE DATABASE tcu;
 USE tcu;
 
 
-
-
 DELIMITER $$
 
 CREATE PROCEDURE sp_loginUsuario(
@@ -22,7 +20,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
 
 
 
@@ -76,20 +73,20 @@ CREATE TABLE imagen_proyecto  (
 
 
 
+-- crud usuarios ********************************************************************************************************************
 
 
+DELIMITER $$
 
+CREATE PROCEDURE sp_obtenerUsuarios()
+BEGIN
+    SELECT id, nombre, correo, contrasena, rol
+    FROM usuario
+    WHERE rol != 'admin'
+      AND eliminado = 0;
+END$$
 
-
-
-
-
-
-
-
-
-
-
+DELIMITER ;
 
 
 
@@ -134,14 +131,106 @@ DELIMITER ;
 
 
 
+
 DELIMITER $$
 
-CREATE PROCEDURE sp_obtenerUsuarios()
+CREATE PROCEDURE sp_actualizarUsuario(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100),
+    IN p_correo VARCHAR(150),
+    IN p_contrasena VARCHAR(255)
+)
 BEGIN
-    SELECT id, nombre, correo, contrasena, rol
-    FROM usuario
-    WHERE rol != 'admin'
-      AND eliminado = 0;
+    DECLARE correo_existente INT;
+    DECLARE error_occurred BOOLEAN DEFAULT FALSE;
+
+    -- Verificar si el correo ya pertenece a otro usuario
+    SELECT COUNT(*) INTO correo_existente 
+    FROM usuario 
+    WHERE correo = p_correo AND id != p_id;
+
+    IF correo_existente > 0 THEN
+        -- Si el correo ya pertenece a otro usuario, mostrar un mensaje
+        SELECT 'Ya existe un usuario con este correo.' AS mensaje;
+    ELSE
+        BEGIN
+            -- Intentar la actualización del usuario
+            UPDATE usuario
+            SET nombre = p_nombre,
+                correo = p_correo,
+                contrasena = p_contrasena
+            WHERE id = p_id;
+
+            -- Verificar si la actualización afectó filas
+            IF ROW_COUNT() > 0 THEN
+                SELECT 'Actualización exitosa.' AS mensaje;
+            ELSE
+                SELECT 'No se encontró el usuario o no se realizaron cambios.' AS mensaje;
+            END IF;
+        END;
+    END IF;
+
+    -- Manejo de excepciones
+    IF error_occurred THEN
+        SELECT 'Ocurrió un error al actualizar el usuario.' AS mensaje;
+        ROLLBACK;
+    END IF;
+
 END$$
 
 DELIMITER ;
+
+
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_eliminarUsuario(
+    IN p_id INT
+)
+BEGIN
+    DECLARE usuario_existente INT;
+    DECLARE eliminado_anterior BOOLEAN;
+
+    -- Verificar si el usuario existe y no está ya eliminado
+    SELECT COUNT(*), eliminado 
+    INTO usuario_existente, eliminado_anterior 
+    FROM usuario 
+    WHERE id = p_id;
+
+    IF usuario_existente = 0 THEN
+        -- Si el usuario no existe, mostrar un mensaje
+        SELECT 'El usuario no existe.' AS mensaje;
+    ELSEIF eliminado_anterior = TRUE THEN
+        -- Si el usuario ya está eliminado, mostrar un mensaje
+        SELECT 'El usuario ya está eliminado.' AS mensaje;
+    ELSE
+        -- Actualizar el campo eliminado a TRUE
+        UPDATE usuario 
+        SET eliminado = TRUE 
+        WHERE id = p_id;
+
+        SELECT 'Eliminación exitosa.' AS mensaje;
+    END IF;
+
+END$$
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+-- crud actividades ********************************************************************************************************************
+
+
+
+
+
+-- crud proyectos ********************************************************************************************************************
+
+

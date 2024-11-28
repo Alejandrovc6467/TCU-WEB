@@ -53,6 +53,7 @@ class UsuariosController
 
     //CRUD ******************************************************************
 
+    
     public function obtenerUsuarios()
     {
         require 'model/UsuarioModel.php';
@@ -66,8 +67,51 @@ class UsuariosController
     }
 
 
+    public function insertarUsuario()
+    {
+        require 'model/UsuarioModel.php';
+        $usuarioModel = new UsuarioModel();
+
+        $lista = $usuarioModel->insertarUsuario(
+            $_POST['nombre'],
+            $_POST['correo'],
+            $_POST['contrasena']
+        );
+        header('Content-Type: application/json');
+        echo json_encode($lista);
+        exit;
+    }
 
 
+    public function actualizarUsuario()
+    {
+        require 'model/UsuarioModel.php';
+        $usuarioModel = new UsuarioModel();
+
+        $lista = $usuarioModel->actualizarUsuario(
+            $_POST['id'],
+            $_POST['nombre'],
+            $_POST['correo'],
+            $_POST['contrasena'],
+        );
+        header('Content-Type: application/json');
+        echo json_encode($lista);
+        exit;
+    }
+    
+
+    public function eliminarUsuario()
+    {
+        require 'model/UsuarioModel.php';
+        $usuarioModel = new UsuarioModel();
+
+        $lista = $usuarioModel->eliminarUsuario(
+            $_POST['id']
+        );
+        header('Content-Type: application/json');
+        echo json_encode($lista);
+        exit;
+    }
 
     
 }
