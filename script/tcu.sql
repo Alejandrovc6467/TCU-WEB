@@ -229,6 +229,8 @@ DELIMITER ;
 
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS sp_obtenerActividades$$
+
 CREATE PROCEDURE sp_obtenerActividades()
 BEGIN
 
@@ -246,6 +248,8 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+
+DROP PROCEDURE IF EXISTS sp_insertarActividad$$
 
 CREATE PROCEDURE sp_insertarActividad(
     IN p_url_archivo VARCHAR(255),
@@ -283,6 +287,8 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+-- eliminar sp en caso de que exista para actualizarlo 
+DROP PROCEDURE IF EXISTS sp_actualizarActividad$$
 
 CREATE PROCEDURE sp_actualizarActividad(
     IN p_id INT,
@@ -333,9 +339,11 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+-- eliminar sp en caso de que exista para actualizarlo 
+DROP PROCEDURE IF EXISTS sp_eliminarActividad$$
 
-CREATE PROCEDURE sp_actualizarActividad(
-    IN p_id INT,
+CREATE PROCEDURE sp_eliminarActividad(
+    IN p_id INT
 )
 BEGIN
     DECLARE actividad_existente INT;
