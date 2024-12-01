@@ -12,8 +12,7 @@ include('public/header.php');
     <!-- Formulario par ingresar actividades -->
     <div class="formulario_container">
 
-        <form method="POST" id="agregarActividad" action="?controlador=Tesina&accion=subirdocumento"
-            enctype="multipart/form-data" accept=".pdf, .doc, .docx, .odt">
+        <form id="agregarActividad">
 
             <div class="mb-3">
                 <label for="basic-url" class="form-label">Ingrese el de la actividad:</label>
@@ -40,7 +39,7 @@ include('public/header.php');
                 <div class="input-group">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-file"
                             style="color: #a3a3a3;"></i></label>
-                    <input class="form-control" type="file" id="archivo" name="archivo" required>
+                    <input class="form-control" type="file" id="imagenActividad" name="imagenActividad" required>
                 </div>
             </div>
 

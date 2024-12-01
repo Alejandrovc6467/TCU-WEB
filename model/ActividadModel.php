@@ -18,9 +18,9 @@ class ActividadModel
         return $resultado;
     }
 
-    public function insertarActividad($url_archivo, $nombre, $descripcion, $id_usuario): array
+    public function insertarActividad($url_archivo, $nombre, $descripcion, $id_usuario)
     {
-        $consulta = $this->db->query('CALL sp_insertarActividad( ?, ?, ?, ? )');
+        $consulta = $this->db->prepare('CALL sp_insertarActividad( ?, ?, ?, ? )');
         $consulta->bindParam(1, $url_archivo);
         $consulta->bindParam(2, $nombre);
         $consulta->bindParam(3, $descripcion);

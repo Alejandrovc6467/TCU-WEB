@@ -8,7 +8,6 @@ class ActividadesController
         $this->view = new View();
     }
 
-   
     private function verificarAutenticacion()
     {
         // Iniciar sesión si no está iniciada
@@ -24,7 +23,6 @@ class ActividadesController
         }
     }
 
- 
     public function mostrar()
     {
         $this->verificarAutenticacion();
@@ -35,43 +33,46 @@ class ActividadesController
             // Puedes agregar más datos según necesites
         ];
 
-        
         $this->view->show("actividades.php", $data);
     }
 
-
-
-
-
     /* CRUD *****************************************/
 
+    public function insertarActividad()
+    {
+        require 'model/ActividadModel.php';
+        $actividadModel = new ActividadModel();
 
+        //se extrae la infromacion de la solicitud
+        $respuesta = $actividadModel->insertarActividad(
+            'url prueba',
+            $_POST['nombre'],
+            $_POST['descripcion'],
+            1
+        );
 
+        //se devuelve el contenido de la respuesta como un json
+        header('Content-Type: application/json');
+        echo json_encode($respuesta);
+        exit;
+    }
 
-
-
-
-
-
-    public function subirdocumento()
+    private function subirdocumento()
     {
         // Verifica si se ha enviado una solicitud POST.
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        
 
-
+            $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
             
-            //nuevo
-            $extension_permitida = ['pdf', 'doc', 'docx', 'odt'];
-
+            //se extrae el archivo enviado
             $archivo = $_FILES['archivo'];
 
+            //extraccion de la informacion general del archivo
             $archivo_info = pathinfo($archivo['name']);
             $archivo_extension = strtolower($archivo_info['extension']);
 
             if (in_array($archivo_extension, $extension_permitida)) {
                
-                    
                 //realizar operaciones de guardado, validación u otras acciones aquí.
 
                 $nombreArchivo = $_FILES['archivo']['name'];
@@ -153,12 +154,6 @@ class ActividadesController
             header('Content-Type: application/json');
             echo json_encode($response);
         }
-        
-      
-    }// subirdocumento
-
-
-
-
+    }
 
 }

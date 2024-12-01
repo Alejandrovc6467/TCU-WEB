@@ -262,9 +262,9 @@ BEGIN
     DECLARE error_occurred BOOLEAN DEFAULT FALSE;
 
     -- verificar que el usuario a ingresar exista en la tabla de usuarios, filtrando por id de dicho usuario
-    SELECT COUNT(*) INTO usuario_existente FROM Usuario WHERE id = p_id_usuario;
+    SELECT COUNT(*) INTO usuario_existente FROM Usuario WHERE id = p_id_usuario AND eliminado = TRUE;
 
-    IF  usuario_existente < 0 THEN
+    IF  usuario_existente > 0 THEN
         -- mensaje de error si el usuario no existe
         SELECT 'Ocurrió un error el usuario no existe.' AS mensaje;
     ELSE
