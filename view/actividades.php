@@ -34,12 +34,26 @@ include('public/header.php');
                 </div>
             </div>
 
-            <div class="mb-3">
+            <!--div class="mb-3">
                 <label for="basic-url" class="form-label">Ingresa imagen de la actividad:</label>
                 <div class="input-group">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-file"
                             style="color: #a3a3a3;"></i></label>
                     <input class="form-control" type="file" id="imagenActividad" name="imagenActividad" required>
+                </div>
+            </div-->
+
+            <div class="mb-3">
+                <label for="basic-url" class="form-label">Ingresa imagen de la actividad:</label>
+                <div class="input-group">
+                    <label class="input-group-text" for="imagenActividad">
+                        <i class="fa-solid fa-file" style="color: #a3a3a3;"></i>
+                    </label>
+                    <input class="form-control" type="file" id="imagenActividad" name="imagenActividad" required>
+                </div>
+                <!-- Contenedor para la vista previa -->
+                <div id="vistaPrevia" class="mt-3">
+                    <!-- Aquí se cargará la vista previa de la imagen -->
                 </div>
             </div>
 
@@ -60,6 +74,7 @@ include('public/header.php');
                     <th>Acciones</th>
                     <th>Nombre</th>
                     <th>Descripcion</th>
+                    <th>Fecha De Modificacion</th>
                     <th>Imagen</th>
                 </tr>
             </thead>

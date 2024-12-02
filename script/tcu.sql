@@ -311,7 +311,7 @@ BEGIN
         BEGIN
             -- actualiza los datos de la actividad sobre-escribiendo la informacion
             UPDATE Actividad
-            SET url_archivo = p_url_archivo,
+            SET url_archivo = COALESCE(p_url_archivo, url_archivo), -- verifica si se actualiza la url
                 nombre = p_nombre,
                 descripcion = p_descripcion,
                 fecha = NOW(),
@@ -358,7 +358,7 @@ BEGIN
         SELECT 'La actividad no existe.' AS mensaje;
     ELSEIF eliminado_anterior = TRUE THEN
         -- mensaje si la actividad ya fue eliminada
-        SELECT 'El actividad ya está eliminado.' AS mensaje;
+        SELECT 'La actividad ya está eliminado.' AS mensaje;
     ELSE
         BEGIN
             -- actualiza los datos de la actividad sobre-escribiendo la informacion del valor borrado
