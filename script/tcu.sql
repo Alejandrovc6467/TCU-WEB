@@ -314,16 +314,20 @@ BEGIN
             SET url_archivo = COALESCE(p_url_archivo, url_archivo), -- verifica si se actualiza la url
                 nombre = p_nombre,
                 descripcion = p_descripcion,
-                fecha = NOW(),
                 id_usuario = p_id_usuario
             WHERE id = p_id;
 
             -- Verificar si la actualización afectó filas
             IF ROW_COUNT() > 0 THEN
+                UPDATE Actividad
+                SET fecha = NOW()
+                WHERE id = p_id;
+
                 SELECT 'Actualización exitosa.' AS mensaje;
             ELSE
                 SELECT 'No se realizaron cambios.' AS mensaje;
             END IF;
+
 
         END;
     END IF;

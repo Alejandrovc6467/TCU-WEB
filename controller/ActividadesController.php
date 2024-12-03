@@ -56,7 +56,7 @@ class ActividadesController
         $archivo = $_FILES['archivo'];
 
         // extenciones permitidas
-        $extension_permitida = ['png', 'jpg', 'jpeg', 'svg', 'webp' ];
+        $extension_permitida = ['png', 'jpg', 'jpeg', 'svg', 'webp'];
 
         //respuesta en caso de un fromato de extencion invalido
         $respuesta = [
@@ -126,64 +126,111 @@ class ActividadesController
         return $respuesta;
     }
 
-    public function actualizarActividad()
+    public function modificarActividad()
     {
-        // se extrae el archivo enviado
-        $archivo = $_FILES['archivo'];
+        // verifica que exita un archivo para actualizar adjunto en el formulario
+        if (isset($_FILES['archivo'])) {
 
-        // extenciones permitidas
-        $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
+            // se extrae el archivo enviado
+            $archivo = $_FILES['archivo'];
 
-        //respuesta en caso de un fromato de extencion invalido
-        $respuesta = [
-            [
-                "mensaje" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . ".",
-                "0" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . "."
-            ]
-        ];
+            // extenciones permitidas
+            $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
 
-        if ($this->verificarExtencionesPermitidas($archivo, $extension_permitida)) {
+            //respuesta en caso de un fromato de extencion invalido
+            $respuesta = [
+                [
+                    "mensaje" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . ".",
+                    "0" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . "."
+                ]
+            ];
 
-            // se extrae la ruta temporal del archivo
-            $rutaTemporal = $archivo['tmp_name'];
+            if ($this->verificarExtencionesPermitidas($archivo, $extension_permitida)) {
 
-            // se define la nueva ruta del archivo 
-            $rutaDestino = $this->definirNombreDeArchivoUnico($archivo);
+                // se extrae la ruta temporal del archivo
+                $rutaTemporal = $archivo['tmp_name'];
 
-            //verificar que se pueda subir el documento correctamente
-            if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
+                // se define la nueva ruta del archivo 
+                $rutaDestino = $this->definirNombreDeArchivoUnico($archivo);
 
-                //verificar si la sescion esta iniciada para tomar el id de usuario
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
+                //verificar que se pueda subir el documento correctamente
+                if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
+
+                    //verificar si la sescion esta iniciada para tomar el id de usuario
+                    if (session_status() === PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    $id_usuario = $_SESSION['id'];
+                    if (!isset($_SESSION['id'])) {
+                        die("Error: ID de usuario no está configurado en la sesión.");
+                    }
+
+                    $respuesta = $this->actualizarActividad(
+                        $_POST['id'],
+                        $rutaDestino,
+                        $_POST['nombre'],
+                        $_POST['descripcion'],
+                        $id_usuario
+                    );
+
+                } else {
+                    $respuesta = [
+                        [
+                            'message' => 'Ocurrió un error, al enviar el documento, intente de nuevo.',
+                            '0' => 'Ocurrió un error, al enviar el documento, intente de nuevo.'
+                        ]
+                    ];
                 }
-                $id_usuario = $_SESSION['id'];
-                if (!isset($_SESSION['id'])) {
-                    die("Error: ID de usuario no está configurado en la sesión.");
-                }
 
-                $respuesta = $this->insertarActividad(
-                    $rutaDestino,
-                    $_POST['nombre'],
-                    $_POST['descripcion'],
-                    $id_usuario
-                );
-
-            } else {
-                $respuesta = [
-                    [
-                        'message' => 'Ocurrió un error, al enviar el documento, intente de nuevo.',
-                        '0' => 'Ocurrió un error, al enviar el documento, intente de nuevo.'
-                    ]
-                ];
             }
+
+            //se devuelve el contenido de la respuesta como un json
+            header('Content-Type: application/json');
+            echo json_encode($respuesta);
+            exit;
+
+        } else {
+            //verificar si la sescion esta iniciada para tomar el id de usuario
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $id_usuario = $_SESSION['id'];
+            if (!isset($_SESSION['id'])) {
+                die("Error: ID de usuario no está configurado en la sesión.");
+            }
+
+            $respuesta = $this->actualizarActividad(
+                $_POST['id'],
+                null,
+                $_POST['nombre'],
+                $_POST['descripcion'],
+                $id_usuario
+            );
+
+            //se devuelve el contenido de la respuesta como un json
+            header('Content-Type: application/json');
+            echo json_encode($respuesta);
+            exit;
 
         }
 
-        //se devuelve el contenido de la respuesta como un json
-        header('Content-Type: application/json');
-        echo json_encode($respuesta);
-        exit;
+    }
+
+    public function actualizarActividad($id, $url_archivo, $nombre, $descripcion, $id_usuario)
+    {
+        require 'model/ActividadModel.php';
+        $actividadModel = new ActividadModel();
+
+        //se ejecuta el metodo para guardar el usuario en base de datos
+        $respuesta = $actividadModel->actualizarActividad(
+            $id,
+            $url_archivo,
+            $nombre,
+            $descripcion,
+            $id_usuario
+        );
+
+        return $respuesta;
     }
 
     public function eliminarActividad()
