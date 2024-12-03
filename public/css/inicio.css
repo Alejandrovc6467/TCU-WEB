@@ -100,8 +100,8 @@
     position: absolute;
     bottom: 10px;
     right: 10px;
-    background-color: #007bff;
-    background-color: var(--titulo);
+    background-color: #2985e7;
+    /* background-color: var(--titulo); */
     color: white;
     border: none;
     padding: 5px 10px;
@@ -176,7 +176,7 @@
     right: 10px; /* Ajusta la posición según sea necesario */
     width: 40px; /* Ancho igual a la altura para un círculo perfecto */
     height: 40px; /* Altura igual al ancho */
-    background-color: var(--colorPrimario);
+    background-color: #2985e7;
     color: white;
     border: none;
     cursor: pointer;
@@ -191,7 +191,7 @@
 
 .close-btn:hover {
     transform: scale(1.1); /* Amplía ligeramente el botón al pasar el ratón */
-    background-color: rgb(86, 179, 241); /* Cambia el color para indicar interacción */
+    background-color: #226fc2; /* Cambia el color para indicar interacción */
 }
 
 
