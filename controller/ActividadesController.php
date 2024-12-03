@@ -56,7 +56,7 @@ class ActividadesController
         $archivo = $_FILES['archivo'];
 
         // extenciones permitidas
-        $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
+        $extension_permitida = ['png', 'jpg', 'jpeg', 'svg', 'webp' ];
 
         //respuesta en caso de un fromato de extencion invalido
         $respuesta = [
@@ -77,11 +77,20 @@ class ActividadesController
             //verificar que se pueda subir el documento correctamente
             if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
 
+                //verificar si la sescion esta iniciada para tomar el id de usuario
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $id_usuario = $_SESSION['id'];
+                if (!isset($_SESSION['id'])) {
+                    die("Error: ID de usuario no está configurado en la sesión.");
+                }
+
                 $respuesta = $this->insertarActividad(
                     $rutaDestino,
                     $_POST['nombre'],
                     $_POST['descripcion'],
-                    1
+                    $id_usuario
                 );
 
             } else {
@@ -144,11 +153,20 @@ class ActividadesController
             //verificar que se pueda subir el documento correctamente
             if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
 
+                //verificar si la sescion esta iniciada para tomar el id de usuario
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $id_usuario = $_SESSION['id'];
+                if (!isset($_SESSION['id'])) {
+                    die("Error: ID de usuario no está configurado en la sesión.");
+                }
+
                 $respuesta = $this->insertarActividad(
                     $rutaDestino,
                     $_POST['nombre'],
                     $_POST['descripcion'],
-                    1
+                    $id_usuario
                 );
 
             } else {

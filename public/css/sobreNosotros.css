@@ -23,6 +23,7 @@
     display: flex;
     color: var(--colortexto);
     padding: 20px 0;
+    width: 100%;
 }
 
     .about-image{

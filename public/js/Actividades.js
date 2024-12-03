@@ -44,8 +44,8 @@ function obtenerActividades() {
                 // Columna de acciones
                 var accionesCell = $("<td>");
                 var editarBtn = $("<button>")
-                    .text("Editar")
-                    .addClass("btn btn-editar")
+                    .html('<span class="material-icons">edit_document</span> ') 
+                    .addClass("butonEditar")
                     .data("id", actividad.id)
                     .data("url_archivo", actividad.url_archivo)
                     .data("nombre", actividad.nombre)
@@ -60,8 +60,8 @@ function obtenerActividades() {
                     });
 
                 var eliminarBtn = $("<button>")
-                    .text("Eliminar")
-                    .addClass("btn btn-eliminar")
+                    .html('<span class="material-icons">cancel</span> ') 
+                    .addClass("butonDelete")
                     .data("id", actividad.id)
                     .on("click", function () {
                         eliminarActividad($(this).data("id"));
@@ -77,7 +77,7 @@ function obtenerActividades() {
                 var img = $("<img>")
                     .attr("src", actividad.url_archivo) // Establece la ruta de la imagen
                     .attr("alt", "Imagen de la actividad") // Texto alternativo
-                    .css("width", "100px") // Ajusta el tamaño de la imagen
+                    .css("width", "60px") // Ajusta el tamaño de la imagen
                     .css("height", "auto");
                 row.append($("<td>").append(img));
 
@@ -128,7 +128,7 @@ function agregarActividad() {
                 Swal.fire({
                     icon: 'success',
                     title: '¡Genial!',
-                    text: 'Usuario registrado correctamente',
+                    text: response[0]["mensaje"],
                     confirmButtonColor: '#088cff'
                 });
             } else if (response[0]["mensaje"].includes("Ocurrió un error")) {
@@ -164,6 +164,12 @@ function editarActividad(id, url_archivo, nombre, descripcion) {
     isEditMode = true;
     editActividadId = id;
 
+    //Eliminar el boton de cancel en caso de que ya exista uno, para agregar el nuevo
+    const cancelEditButtonAnterior = document.getElementById('cancelEditButton');
+       if (cancelEditButtonAnterior) {
+        cancelEditButtonAnterior.remove();
+    }
+
     // Change button text and style
     const submitButton = document.getElementById('buttonRegistrarActividad');
     submitButton.textContent = 'Actualizar Actividad';
@@ -174,7 +180,7 @@ function editarActividad(id, url_archivo, nombre, descripcion) {
     const cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancelar';
     cancelButton.type = 'button';
-    cancelButton.classList.add('btn', 'btn-secondary', 'ms-2');
+    cancelButton.classList.add('botonCancelar');
     cancelButton.id = 'cancelEditButton';
     cancelButton.addEventListener('click', cancelEdit);
 

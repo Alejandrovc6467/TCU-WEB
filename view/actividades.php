@@ -15,7 +15,7 @@ include('public/header.php');
         <form id="agregarActividad">
 
             <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingrese el de la actividad:</label>
+                <label for="basic-url" class="form-label">Ingresa el nombre de la actividad:</label>
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-circle-info"
                             style="color: #a3a3a3;"></i></span>
@@ -25,7 +25,7 @@ include('public/header.php');
             </div>
 
             <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingresa descripcion de la actividad:</label>
+                <label for="basic-url" class="form-label">Ingresa la descripción de la actividad:</label>
                 <div class="input-group">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-circle-info"
                             style="color: #a3a3a3;"></i></label>
@@ -44,7 +44,7 @@ include('public/header.php');
             </div-->
 
             <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingresa imagen de la actividad:</label>
+                <label for="basic-url" class="form-label">Ingresa la imagen de la actividad:</label>
                 <div class="input-group">
                     <label class="input-group-text" for="imagenActividad">
                         <i class="fa-solid fa-file" style="color: #a3a3a3;"></i>
@@ -59,8 +59,7 @@ include('public/header.php');
 
             <div class="conatainerBotonFormularioModal">
                 <button type="submit" value="Registrar" id="buttonRegistrarActividad"
-                    class="btn btn-primary butonAgregarForm"><i class="fa-solid fa-square-plus"
-                        style="color: #ffffff;"></i> Agregar Actividad</button>
+                    class="butonAgregar">Agregar Actividad</button>
             </div>
 
         </form>
@@ -79,14 +78,14 @@ include('public/header.php');
                 </tr>
             </thead>
             <tbody>
-                <!-- Aquí se llenarán los datos de los usuarios -->
+                <!-- Aquí se llenarán los datos de las actividades -->
             </tbody>
         </table>
     </div>
 
 </div>
 
-<script src="public/js/Actividades.js?1"></script>
+<script src="public/js/Actividades.js?6"></script>
 
 <?php
 include('public/footer.php');

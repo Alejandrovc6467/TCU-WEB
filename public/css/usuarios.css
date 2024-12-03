@@ -1,5 +1,4 @@
 
-
 .usuarios_container{
     display: flex;
     flex-direction: column;
@@ -8,33 +7,42 @@
 }
 
 
-
-
 .usuarios_title{
     color: var(--titulo);
     text-align: center;
-    margin-top: 30px;
-   
+    margin-top: 30px; 
 }
+
 
 .formulario_container{
     width: 70%;
     margin: 30px 0 50px 0;
-    
 }
+
 
 .conatainerBotonFormularioModal{
     margin-top: 40px;
 }
 
 
+.butonAgregar{
+    width: 160px;
+    margin-right: 15px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #1d87dd;
+    color: white;
+}
 
-
-
-
-
-
-
+.botonCancelar{
+    width: 80px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #6c757d;
+    color: white;
+}
 
 
 
@@ -72,6 +80,43 @@
    
       
     }
+
+
+  
+   
+    .butonDelete{
+        width: 50px;
+        border-radius: 10px;
+        border: none;
+        background-color: transparent;
+        color: #FF6961;
+        /* color: var(--colorTexto); */
+        transition: 1s ease;
+    }
+
+    .butonDelete span{
+        font-size: 24px;
+    }
+  
+    .butonEditar{
+        width: 50px;
+        border-radius: 10px;
+        border: none;
+        background-color: transparent;
+        color: #1d87dd;
+        /* color: var(--colorTexto); */
+        transition: 1s ease;
+    }
+
+    .butonEditar span{
+      font-size: 24px;
+    }
+
+    .butonEditar:hover, .butonDelete:hover {
+        transform: scale(1.3);
+    }
+    
+    
 
     /*las tres primeras de arriba son las configuraciones necesarias para fijas la thead del table, lo demas de abjo en disenio*/
 

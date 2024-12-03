@@ -39,8 +39,8 @@ function obtenerUsuarios() {
                     // Columna de acciones
                     var accionesCell = $("<td>");
                     var editarBtn = $("<button>")
-                        .text("Editar")
-                        .addClass("btn btn-editar")
+                        .html('<span class="material-icons">edit_document</span> ') 
+                        .addClass("butonEditar")
                         .data("id", usuario.id)
                         .data("nombre", usuario.nombre)
                         .data("correo", usuario.correo)
@@ -55,8 +55,8 @@ function obtenerUsuarios() {
                     });
                                                
                     var eliminarBtn = $("<button>")
-                        .text("Eliminar")
-                        .addClass("btn btn-eliminar")
+                        .html('<span class="material-icons">cancel</span> ') 
+                        .addClass("butonDelete")
                         .data("id", usuario.id)
                         .on("click", function() {
                             eliminarUsuario($(this).data("id"));
@@ -67,7 +67,7 @@ function obtenerUsuarios() {
    
                     row.append($("<td>").text(usuario.nombre));
                     row.append($("<td>").text(usuario.correo));
-                    row.append($("<td>").text(usuario.contrasena));
+                    row.append($("<td>").text('********'));
    
                     $("#containertabla tbody").append(row);
                 }
@@ -153,6 +153,12 @@ function editarUsuario(id, nombre, correo, contrasena) {
     // Enter edit mode
     isEditMode = true;
     editUserId = id;
+
+    //Eliminar el boton de cancel en caso de que ya exista uno, para agregar el nuevo
+    const cancelEditButtonAnterior = document.getElementById('cancelEditButton');
+       if (cancelEditButtonAnterior) {
+        cancelEditButtonAnterior.remove();
+    }
    
     // Change button text and style
     const submitButton = document.getElementById('buttonRegistrarUsuario');
@@ -164,7 +170,7 @@ function editarUsuario(id, nombre, correo, contrasena) {
     const cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancelar';
     cancelButton.type = 'button';
-    cancelButton.classList.add('btn', 'btn-secondary', 'ms-2');
+    cancelButton.classList.add('botonCancelar');
     cancelButton.id = 'cancelEditButton';
     cancelButton.addEventListener('click', cancelEdit);
    
@@ -224,13 +230,20 @@ function actualizarUsuario() {
                        text: response[0]["mensaje"],
                        confirmButtonColor: '#088cff'
                    });
-               } else {
+               } else if (response[0]["mensaje"] === "No se encontró el usuario o no se realizaron cambios.") {
                    Swal.fire({
                        icon: 'error',
                        title: 'Oops...',
-                       text: 'Ocurrió un error, intenta nuevamente',
+                       text: 'No se realizaron cambios',
                        confirmButtonColor: '#088cff'
                    });
+               }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Ocurrió un error, intenta nuevamente',
+                        confirmButtonColor: '#088cff'
+                    });
                }
    
                obtenerUsuarios();

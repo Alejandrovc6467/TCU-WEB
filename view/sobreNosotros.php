@@ -68,11 +68,11 @@
 
 
   <section class="about-section color-section">
+
     <div class="about-image">
-     
       <img src="public/assets/reunionSitioMataTodos.webp" alt="reunionSitioMataTodos" >
-     
     </div>
+
     <div class="about-text">
       <h1 class="about__title">¿Cómo lo logramos?</h1>
       <p class="about__description">A través de talleres y charlas, una vez identificadas sus necesidades, lo cual les
@@ -85,6 +85,7 @@
         <li class="about__item"> Mujeres emprendedoras.</li>
       </ul>
     </div>
+    
   </section>
 
 

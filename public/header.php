@@ -14,11 +14,11 @@
 	<link rel="stylesheet" href="public/css/header.css?14">
 	<link rel="stylesheet" href="public/css/footer.css?15454">
 	<link rel="stylesheet" href="public/css/inicio.css?6">
-	<link rel="stylesheet" href="public/css/sobreNosotros.css?787">
+	<link rel="stylesheet" href="public/css/sobreNosotros.css?13">
 	<link rel="stylesheet" href="public/css/contacto.css?12">
 	<link rel="stylesheet" href="public/css/login.css?7">
-	<link rel="stylesheet" href="public/css/usuarios.css?3">
-	<link rel="stylesheet" href="public/css/actividades.css?2">
+	<link rel="stylesheet" href="public/css/usuarios.css?10">
+	<link rel="stylesheet" href="public/css/actividades.css?7">
 	<link rel="stylesheet" href="public/css/proyectos.css?2">
 	
 	<!--text fonts-->
@@ -33,6 +33,8 @@
 
 	<!--iconos-->
 	<script src="https://kit.fontawesome.com/b7fa0175bc.js" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
 
 	<script src="public/js/jquery.js"></script>
