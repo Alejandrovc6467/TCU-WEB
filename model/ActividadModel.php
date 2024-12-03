@@ -35,9 +35,9 @@ class ActividadModel
     {
         $consulta = $this->db->prepare('CALL sp_actualizarActividad( ?, ?, ?, ?, ? )');
         $consulta->bindParam(1, $id);
-        $consulta->bindParam(2, $url_archivo? $url_archivo : PDO::PARAM_NULL);
+        $consulta->bindParam(2, $url_archivo, $url_archivo !== null ? PDO::PARAM_STR : PDO::PARAM_NULL);
         $consulta->bindParam(3, $nombre);
-        $consulta->bindParam(4, $descripcion);
+        $consulta->bindParam(4, var: $descripcion);
         $consulta->bindParam(5, $id_usuario);
         $consulta->execute();
         $resultado = $consulta->fetchAll();

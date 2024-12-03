@@ -1,7 +1,6 @@
 
 // Variables globales para controlar el modo de edición
 let isEditMode = false;
-let editUserId = null;
 let editActividadId = null;
 
 
@@ -190,6 +189,7 @@ function editarActividad(id, url_archivo, nombre, descripcion) {
     // Fill form fields
     document.getElementById('nombre').value = nombre;
     document.getElementById('descripcion').value = descripcion;
+    document.getElementById('imagenActividad').required = false;
     mostrarVistaPreviaDesdeURL(url_archivo);
 }
 
@@ -213,6 +213,8 @@ function cancelEdit() {
     if (cancelButton) {
         cancelButton.remove();
     }
+
+    document.getElementById('imagenActividad').required = true;
 };
 
 // Función para actualizar una actividad
@@ -227,39 +229,45 @@ function actualizarActividad() {
 
     // Crear un objeto FormData para enviar archivos y datos
     var form_data = new FormData();
+    form_data.append("id", editActividadId); // Agregar el id de la actividad
     form_data.append("nombre", nombre); // Agregar el nombre
     form_data.append("descripcion", descripcion); // Agregar la descripción
     form_data.append("archivo", imagen); // Agregar la imagen (archivo)
 
-    var form_data = {
-        id: editUserId,
-        nombre: nombre,
-        correo: correo,
-        contrasena: contrasena
-    };
-
+    console.log(form_data);
     $.ajax({
+        url: "?controlador=Actividades&accion=modificarActividad",
         type: "POST",
-        url: "?controlador=Usuarios&accion=actualizarUsuario",
         data: form_data,
         dataType: "json",
+        processData: false, // No procesar los datos automáticamente
+        contentType: false, // Dejar que el navegador configure el tipo de contenido
         success: function (response) {
-            // Habilitar el botón
-            submitButton.disabled = false;
+            console.log(response);
 
-            if (response[0]["mensaje"] === "Actualización exitosa.") {
+            // Habilitar el botón
+            document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
+
+            if (response[0]["mensaje"] === 'Actualización exitosa.') {
                 limpiarCamposFormulario();
 
                 Swal.fire({
                     icon: 'success',
                     title: '¡Genial!',
-                    text: 'Usuario actualizado correctamente',
+                    text: 'Actualización exitosa.',
                     confirmButtonColor: '#088cff'
                 });
 
                 // Salir del modo de edición
                 cancelEdit();
-            } else if (response[0]["mensaje"] === "Ya existe un usuario con este correo.") {
+            } else if (response[0]["mensaje"] === 'No se realizaron cambios.') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Información',
+                    text: response[0]["mensaje"],
+                    confirmButtonColor: '#088cff'
+                });
+            } else if (response[0]["mensaje"].includes("Ocurrió un error")) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -275,20 +283,14 @@ function actualizarActividad() {
                 });
             }
 
-            obtenerUsuarios();
+            obtenerActividades();
         },
         error: function (xhr, status, error) {
             console.log(error, xhr, status);
             
             // Habilitar el botón en caso de error
-            submitButton.disabled = false;
+            document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un problema al actualizar el usuario',
-                confirmButtonColor: '#088cff'
-            });
         }
     });
 }
