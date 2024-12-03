@@ -133,6 +133,85 @@
 </div>
 
 
+
+<div class="titulo_timeline_container">
+  <h3>Línea de tiempo de las actividades, metas, hitos y logros del TCU</h3>
+  <p>A continuación se muestra una línea de tiempo de las diferentes actividades, metas, hitos y logros que ha obtenido este TCU</p>
+</div>
+
+<div class="timeline">
+
+        <ul class="timeline__list">
+            <li class="event event--highlighted">
+                <div class="event__date">2022</div>
+                <div class="feature">
+                    <section class="feature__header">
+                        <i class="feature__icon bi bi-bookmark-fill"></i>
+                        <h1 class="feature__title">Diagnósticos a microempresarios, emprendedoras, asociaciones y organizaciones</h1>
+                    </section>
+                    <p class="feature__description">A través de la implementación de cuestionarios y entrevistas que permitan la delimitación de las principales líneas de acción, de acuerdo con su actividad productiva, para mejorar su gestión empresarial.</p>
+                </div>
+            </li>
+
+            <li class="event event--highlighted">
+                <div class="event__date">2022</div>
+                <div class="feature">
+                    <section class="feature__header">
+                        <i class="bi bi-award-fill"></i>
+                        <h1 class="feature__title">Talleres y charlas</h1>
+                    </section>
+                    <p class="feature__description">Realizar talleres y charlas dirigidos a los microempresarios, mujeres emprendedoras, y organizaciones comunales, para el mejoramiento en su gestión empresarial ante las necesidades previamente identificadas.</p>
+                </div>
+            </li>
+
+            <li class="event event--highlighted">
+                <div class="event__date">2022</div>
+                <div class="feature">
+                    <section class="feature__header">
+                        <i class="bi bi-award-fill"></i>
+                        <h1 class="feature__title">Elaboración de manuales</h1>
+                    </section>
+                    <p class="feature__description">Elaborar un manual a través de la recopilación de información obtenida en las charlas y talleres, que sirva a los participantes beneficiarios como referencia sobre el tema de buenas prácticas empresariales según su línea de acción.</p>
+                </div>
+            </li>
+
+            <li class="event event--highlighted">
+                <div class="event__date">2023</div>
+                <div class="feature">
+                    <section class="feature__header">
+                        <i class="bi bi-reception-4"></i>
+                        <h1 class="feature__title">Diagnosticos sobre las necesidades de los microempresarios, emprendedoras, asociaciones y organizaciones comunales</h1>
+                    </section>
+                    <p class="feature__description">Diagnosticar las necesidades de los microempresarios, emprendedoras, asociaciones y organizaciones comunales, a través de la implementación de cuestionarios y entrevistas que permitan la delimitación de las principales líneas de acción, de acuerdo con su actividad productiva, para mejorar su gestión empresarial.</p>
+                </div>
+            </li>
+
+            <li class="event event--highlighted">
+                <div class="event__date">2023</div>
+                <div class="feature">
+                    <section class="feature__header">
+                        <i class="feature__icon bi bi-bookmark-fill"></i>
+                        <h1 class="feature__title">Realización de talleres y charlas</h1>
+                    </section>
+                    <p class="feature__description">Realizar talleres y charlas dirigidos a los microempresarios, mujeres emprendedoras, y organizaciones comunales, para el mejoramiento en su gestión empresarial ante las necesidades previamente identificadas.</p>
+                </div>
+            </li>
+
+            <li class="event event--highlighted">
+                <div class="event__date">2023</div>
+                <div class="feature">
+                    <section class="feature__header">
+                        <i class="feature__icon bi bi-bookmark-fill"></i>
+                        <h1 class="feature__title">Elaboración de manuales</h1>
+                    </section>
+                    <p class="feature__description">Elaborar un manual a través de la recopilación de información obtenida en las charlas y talleres, que sirva a los participantes beneficiarios como referencia sobre el tema de buenas prácticas empresariales según su línea de acción.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
 <?php
   include('public/footer.php');
 ?>

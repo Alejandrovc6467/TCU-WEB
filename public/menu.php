@@ -23,10 +23,10 @@ if (session_status() == PHP_SESSION_NONE) {
       <li class="navbar-item">
         <div class="container_configuracion">
           <div class="dropdown">
-            <button type="button" class="btn_configuracion" id="dropdownMenuButton"> <i class="fas fa-user"></i> </button>
+            <button type="button" class="btn_configuracion" id="dropdownMenuButton"> <i class="bi bi-person-circle"></i> </button>
             <div class="menu_configuraciones" aria-labelledby="dropdownMenuButton">
               <div class="infoMenu_container">
-                <i class="fas fa-user fa-lg"></i>
+                <i class="bi bi-person-circle"></i>
                 <?php
                     $nombre = $_SESSION['nombre'];
                     $correo = $_SESSION['correo'];

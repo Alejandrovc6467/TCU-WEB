@@ -145,18 +145,16 @@
 }
 
 .btn_configuracion {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #f0f0f0;
+
+  background-color: transparent;
   border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  background: linear-gradient(90deg, #279fde, #0063b3);
-  color: #f0f0f0;
+
+
+}
+
+.btn_configuracion i {
+  font-size: 30px;
+  color: var(--colorTextoP);
 }
 
 
@@ -176,6 +174,9 @@
 
 .infoMenu_container {
   text-align: center;
+}
+.infoMenu_container i {
+ font-size: 30px;
 }
 .nombre_infoMenu{
   margin-top: 5px;

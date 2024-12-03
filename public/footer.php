@@ -21,9 +21,9 @@
 
         <div class="footer-contact">
             <h1 class="footer__contact-title">Contactos</h1>
-            <p class="footer-contact-element"> <i class="fa-regular fa-envelope fa-lg"></i> tcu768web@gmail.com</p>
-            <p class="footer-contact-element"> <i class="fa-solid fa-phone fa-lg"></i> 2511 9228</p>
-            <p class="footer-contact-element"> <i class="fa-solid fa-location-dot fa-lg"></i> Frente a los tribunales de justicia Turrialba</p>
+            <p class="footer-contact-element"> <i class="bi bi-envelope"></i> tcu768web@gmail.com</p>
+            <p class="footer-contact-element"> <i class="bi bi-telephone"></i> 2511 9228</p>
+            <p class="footer-contact-element"> <i class="bi bi-geo-alt"></i> Frente a los tribunales de justicia Turrialba</p>
         </div>
 
     </div>
@@ -33,8 +33,8 @@
         <p class="footer__copyright">© 2024 Universidad de Costa Rica TC-768</p>
 
         <div class="footer__social-icons">
-            <a href="https://www.facebook.com/profile.php?id=100082053260381" target="_blank"> <i class="fa-brands fa-facebook fa-xl" style="color: #ffffff;"></i></a>
-            <a href="https://www.instagram.com/tc768_gestionando_tu_empresa/" target="_blank"> <i class="fa-brands fa-instagram fa-xl" style="color: #ffffff;"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=100082053260381" target="_blank"> <i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/tc768_gestionando_tu_empresa/" target="_blank"> <i class="bi bi-instagram"></i></a>
         </div>
 
     </div>

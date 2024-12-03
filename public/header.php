@@ -11,10 +11,10 @@
 
 	<!--Style-->
 	<link rel="stylesheet" href="public/css/base.css?1">
-	<link rel="stylesheet" href="public/css/header.css?14">
-	<link rel="stylesheet" href="public/css/footer.css?15454">
+	<link rel="stylesheet" href="public/css/header.css?134">
+	<link rel="stylesheet" href="public/css/footer.css?16">
 	<link rel="stylesheet" href="public/css/inicio.css?6">
-	<link rel="stylesheet" href="public/css/sobreNosotros.css?13">
+	<link rel="stylesheet" href="public/css/sobreNosotros.css?16">
 	<link rel="stylesheet" href="public/css/contacto.css?12">
 	<link rel="stylesheet" href="public/css/login.css?7">
 	<link rel="stylesheet" href="public/css/usuarios.css?10">
@@ -32,8 +32,9 @@
 	<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
 	<!--iconos-->
-	<script src="https://kit.fontawesome.com/b7fa0175bc.js" crossorigin="anonymous"></script>
+	
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
 
 

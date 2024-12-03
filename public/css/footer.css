@@ -57,6 +57,11 @@
     gap: 1rem;
   }
 
+  .footer__social-icons i {
+    font-size: 25px;
+    color: white;
+  }
+
   .footer__icon:hover{
     transform: scale(1.1);
   }

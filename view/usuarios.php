@@ -17,7 +17,7 @@ include('public/header.php');
       <div class="mb-3">
           <label for="basic-url" class="form-label">Ingresa el nombre:</label>
           <div class="input-group">
-              <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user" style="color: #a3a3a3;"></i></span>
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"  style="color: #a3a3a3;"></i></span>
               <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
           </div>
       </div>
@@ -26,7 +26,7 @@ include('public/header.php');
       <div class="mb-3">
           <label for="basic-url" class="form-label">Ingresa el correo:</label>
           <div class="input-group">
-              <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope" style="color: #a3a3a3;"></i></span>
+              <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"  style="color: #a3a3a3;"></i> </span>
               <input type="email" class="form-control" placeholder="" id="correo" aria-label="correo" aria-describedby="basic-addon1" required>
           </div>
       </div>
@@ -34,7 +34,7 @@ include('public/header.php');
       <div class="mb-3">
           <label for="basic-url" class="form-label">Ingresa la contraseña:</label>
           <div class="input-group">
-              <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock" style="color: #a3a3a3;"></i></span>
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-file-earmark-lock-fill" style="color: #a3a3a3;"></i></span>
               <input type="text" class="form-control" placeholder="" id="contrasena" aria-label="contrasena" aria-describedby="basic-addon1" required>
           </div>
       </div>

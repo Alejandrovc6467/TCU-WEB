@@ -17,8 +17,7 @@ include('public/header.php');
             <div class="mb-3">
                 <label for="basic-url" class="form-label">Ingresa el nombre de la actividad:</label>
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-circle-info"
-                            style="color: #a3a3a3;"></i></span>
+                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-info-circle-fill"  style="color: #a3a3a3;"></i></span>
                     <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre"
                         aria-describedby="basic-addon1" maxlength="255" required>
                 </div>
@@ -27,8 +26,7 @@ include('public/header.php');
             <div class="mb-3">
                 <label for="basic-url" class="form-label">Ingresa la descripción de la actividad:</label>
                 <div class="input-group">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-circle-info"
-                            style="color: #a3a3a3;"></i></label>
+                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-info-circle-fill"  style="color: #a3a3a3;"></i></label>
                     <textarea class="form-control" placeholder="" id="descripcion" aria-label="descripcion"
                         aria-describedby="basic-addon1" maxlength="255" required></textarea>
                 </div>
@@ -47,7 +45,7 @@ include('public/header.php');
                 <label for="basic-url" class="form-label">Ingresa la imagen de la actividad:</label>
                 <div class="input-group">
                     <label class="input-group-text" for="imagenActividad">
-                        <i class="fa-solid fa-file" style="color: #a3a3a3;"></i>
+                        <i class="bi bi-file-earmark-arrow-up-fill"  style="color: #a3a3a3;"></i>
                     </label>
                     <input class="form-control" type="file" id="imagenActividad" name="imagenActividad" required>
                 </div>
