@@ -10,3 +10,38 @@
     text-align: center;
    
 }
+
+.container-contacto{
+
+    width: 100%;
+    display: flex;
+    justify-content: center ;
+
+}
+
+.Subcontainer-contacto{
+
+    width: 90%;
+    max-width: 1200px;
+    background-color: red;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+
+.container-contacto-info{
+
+    width: 100%;
+    
+    background-color: blue;
+}
+
+
+.container-contacto-form{
+
+    width: 100%;
+    
+    background-color: yellow;
+}

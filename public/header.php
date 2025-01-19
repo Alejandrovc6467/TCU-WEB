@@ -13,9 +13,9 @@
 	<link rel="stylesheet" href="public/css/base.css?1">
 	<link rel="stylesheet" href="public/css/header.css?134">
 	<link rel="stylesheet" href="public/css/footer.css?16">
-	<link rel="stylesheet" href="public/css/inicio.css?6">
+	<link rel="stylesheet" href="public/css/inicio.css?8">
 	<link rel="stylesheet" href="public/css/sobreNosotros.css?16">
-	<link rel="stylesheet" href="public/css/contacto.css?12">
+	<link rel="stylesheet" href="public/css/contacto.css?16">
 	<link rel="stylesheet" href="public/css/login.css?7">
 	<link rel="stylesheet" href="public/css/usuarios.css?10">
 	<link rel="stylesheet" href="public/css/actividades.css?7">

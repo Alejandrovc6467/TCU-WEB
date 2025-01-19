@@ -94,7 +94,11 @@ function obtenerActividadesParaInicio() {
                         // Populate fullscreen elements
                         fullscreenImage.attr('src', image.attr('src'));
                         fullscreenImage.attr('alt', image.attr('alt'));
-                        fullscreenDescription.html(originalDescription.html());
+                        
+                        fullscreenDescription.html(`
+                            <h3>${actividad.nombre}</h3>
+                            <p>${actividad.descripcion}</p>
+                        `);
 
                         // Show fullscreen overlay
                         fullscreenOverlay.css('display', 'flex');

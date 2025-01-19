@@ -161,14 +161,27 @@
     width: 100%;
     background: rgba(0, 0, 0, 0.7);
     background-color: var(--colorPrimario);
-    color: white;
+    background-color: white;
+    /* color: rgb(148, 148, 148); */
     padding: 25px 15px;
     box-sizing: border-box;
     max-height: 30%;
     overflow-y: auto;
     border-radius: 0 0 10px 10px ;
 }
-    
+   
+/* New styles for title and description */
+.fullscreen-description h3 {
+    color: var(--colorPrimario); /* Celeste - matching your existing accent color */
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.fullscreen-description p {
+    color: #666666; /* Gris */
+    line-height: 1.5;
+    margin: 0;
+}
 
 .close-btn {
     position: absolute;
