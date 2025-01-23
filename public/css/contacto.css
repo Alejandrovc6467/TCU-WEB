@@ -8,40 +8,111 @@
 .contacto-title-text{
     color: var(--colortexto);
     text-align: center;
-   
+    margin-bottom: 20px;
 }
 
 .container-contacto{
-
     width: 100%;
     display: flex;
     justify-content: center ;
-
+    margin-bottom: 100px;
 }
 
-.Subcontainer-contacto{
-
+.subcontainer-contacto{
     width: 90%;
     max-width: 1200px;
-    background-color: red;
     display: flex;
     flex-direction: row;
     justify-content: center;
-
 }
 
 
-.container-contacto-info{
 
+.container-contacto-form {
     width: 100%;
-    
-    background-color: blue;
+    /* background-color: yellow; */
+    padding: 15px;
+    border-radius: 0px 15px 15px 0px; 
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.formulario_container_contacto {
+    width: 100%;
+    padding: 10px;
+}
+
+.box-input-doble{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inputFormSingle{
+    width: 48%;
+}
+
+.butonContactanos{
+    border: none;
+    border-radius: 10px;
+    background-color: var(--colorPrimario);
+    padding: 7px 17px;
+    color: white;
 }
 
 
-.container-contacto-form{
 
-    width: 100%;
+
+
+
+.container-contacto-informacion{
+    width: 35%;
+    background-color: var(--colorPrimario);
+    padding: 20px;
+    border-radius: 15px 0 0 15px; 
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.container-contacto-informacion h4, .container-contacto-informacion p{
+  color: white;
+}
+
+
+
+
+
+@media (max-width: 800px) {
+   
+    .subcontainer-contacto{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container-contacto-form{
+        width: 100%; 
+        border-radius: 0px 0px 15px 15px; 
+    }
+
+    .box-input-doble{
+        flex-direction: column;
+    }
+
+    .inputFormSingle{
+        width: 100%;
+    }
+
     
-    background-color: yellow;
+    
+    .container-contacto-informacion{
+        width: 100%;
+        border-radius: 15px 15px 0px 0px; 
+    }
+
+  
+     
 }

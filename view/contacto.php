@@ -8,87 +8,115 @@ include('public/header.php');
 
 <div class="container-contacto">
     
-    <div class="Subcontainer-contacto">
+    <div class="subcontainer-contacto">
 
-    <div class="container-contacto-info">
+        <div class="container-contacto-informacion">
 
-        <h3>Contacta con el equipo</h3>
-        <p>Estas listo para contactarnos y darle una mano?</p>
-
-
-        <h3>Contáctanos al:</h3>
-        <p>2511 9228</p>
-
-        <h3>Ubicación</h3>
-
-        <iframe _ngcontent-ng-c2656257193="" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15721.56949926622!2d-83.6719512!3d9.9012413!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0d42417bc6851%3A0xd2ae13fcaa9ce072!2sUniversidad%20de%20Costa%20Rica%20(Sede%20del%20Atl%C3%A1ntico)!5e0!3m2!1ses-419!2scr!4v1706824347591!5m2!1ses-419!2scr" width="100%" height="100%" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="border: 0;"></iframe>
-        
-        <p>Costa Rica/Cartago/Turrialba</p>
+            <h4>Contacta con el equipo</h4>
+            <p>Estas listo para contactarnos y darle una mano?</p>
 
 
-        <div class="footer__social-icons">
-            <a href="https://www.facebook.com/profile.php?id=100082053260381" target="_blank"> <i class="bi bi-facebook"></i></a>
-            <a href="https://www.instagram.com/tc768_gestionando_tu_empresa/" target="_blank"> <i class="bi bi-instagram"></i></a>
+            <h4>Contáctanos al:</h4>
+            <p>  <i class="bi bi-telephone"></i> 2511 9228</p>
+
+            <h4>Ubicación:</h4>
+
+            <iframe _ngcontent-ng-c2656257193="" 
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15721.56949926622!2d-83.6719512!3d9.9012413!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0d42417bc6851%3A0xd2ae13fcaa9ce072!2sUniversidad%20de%20Costa%20Rica%20(Sede%20del%20Atl%C3%A1ntico)!5e0!3m2!1ses-419!2scr!4v1706824347591!5m2!1ses-419!2scr" 
+                width="100%" 
+                height="33%" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade" 
+                style="border: 0; border-radius: 10px;">
+            </iframe>
+
+            <p>Costa Rica/Cartago/Turrialba</p>
+
+
+            <div class="footer__social-icons">
+                <a href="https://www.facebook.com/profile.php?id=100082053260381" target="_blank"> <i class="bi bi-facebook"></i></a>
+                <a href="https://www.instagram.com/tc768_gestionando_tu_empresa/" target="_blank"> <i class="bi bi-instagram"></i></a>
+            </div>
+
         </div>
 
-    </div>
-
-    <div class="container-contacto-form">
+        <div class="container-contacto-form">
 
 
-    <div class="formulario_container">
+            <div class="formulario_container_contacto">
 
-        <form id="agregarActividad">
+                <form id="agregarActividad">
 
-            <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingresa el nombre de la actividad:</label>
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-info-circle-fill"  style="color: #a3a3a3;"></i></span>
-                    <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre"
-                        aria-describedby="basic-addon1" maxlength="255" required>
-                </div>
+                    
+                  
+                    <div class="box-input-doble">
+
+                        <div class="mb-3 inputFormSingle">
+                            <label for="basic-url" class="form-label">Nombre:</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"  style="color: #a3a3a3;"></i></span>
+                                <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 inputFormSingle">
+                            <label for="basic-url" class="form-label">Apellido:</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"  style="color: #a3a3a3;"></i></span>
+                                <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    
+                    <div class="box-input-doble">
+
+                        <div class="mb-3 inputFormSingle">
+                            <label for="basic-url" class="form-label">Correo:</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"  style="color: #a3a3a3;"></i> </span>
+                                <input type="email" class="form-control" placeholder="" id="correo" aria-label="correo" aria-describedby="basic-addon1" required>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3 inputFormSingle">
+                            <label for="basic-url" class="form-label">Teléfono:</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone-fill"  style="color: #a3a3a3;"></i></span>
+                                <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre"
+                                    aria-describedby="basic-addon1" maxlength="255" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    
+
+
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Mensaje:</label>
+                        <div class="input-group">
+                            <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-chat-left-text-fill"  style="color: #a3a3a3;"></i></label>
+                            <textarea class="form-control" placeholder="" id="descripcion" aria-label="descripcion"
+                                aria-describedby="basic-addon1" maxlength="255" required></textarea>
+                        </div>
+                    </div>
+
+
+
+                    <div class="conatainerBotonFormularioModal">
+                        <button type="submit" value="Registrar" id="buttonRegistrarActividad"
+                            class="butonContactanos">Contáctanos</button>
+                    </div>
+
+                </form>
+
             </div>
 
-            <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingresa la descripción de la actividad:</label>
-                <div class="input-group">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-info-circle-fill"  style="color: #a3a3a3;"></i></label>
-                    <textarea class="form-control" placeholder="" id="descripcion" aria-label="descripcion"
-                        aria-describedby="basic-addon1" maxlength="255" required></textarea>
-                </div>
-            </div>
-
-            <!--div class="mb-3">
-                <label for="basic-url" class="form-label">Ingresa imagen de la actividad:</label>
-                <div class="input-group">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-file"
-                            style="color: #a3a3a3;"></i></label>
-                    <input class="form-control" type="file" id="imagenActividad" name="imagenActividad" required>
-                </div>
-            </div-->
-
-            <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingresa la imagen de la actividad:</label>
-                <div class="input-group">
-                    <label class="input-group-text" for="imagenActividad">
-                        <i class="bi bi-file-earmark-arrow-up-fill"  style="color: #a3a3a3;"></i>
-                    </label>
-                    <input class="form-control" type="file" id="imagenActividad" name="imagenActividad" required>
-                </div>
-                <!-- Contenedor para la vista previa -->
-                <div id="vistaPrevia" class="mt-3">
-                    <!-- Aquí se cargará la vista previa de la imagen -->
-                </div>
-            </div>
-
-            <div class="conatainerBotonFormularioModal">
-                <button type="submit" value="Registrar" id="buttonRegistrarActividad"
-                    class="butonAgregar">Agregar Actividad</button>
-            </div>
-
-        </form>
-
-    </div>
+        </div>
 
     </div>
 
