@@ -1,5 +1,13 @@
 <?php
 include('public/header.php');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
+
 ?>
 
 
@@ -46,73 +54,51 @@ include('public/header.php');
 
             <div class="formulario_container_contacto">
 
-                <form id="agregarActividad">
-
-                    
-                  
+                <form id="enviarMensajeContacto" method="POST">
                     <div class="box-input-doble">
-
                         <div class="mb-3 inputFormSingle">
                             <label for="basic-url" class="form-label">Nombre:</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"  style="color: #a3a3a3;"></i></span>
-                                <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill" style="color: #a3a3a3;"></i></span>
+                                <input type="text" class="form-control" placeholder="" id="nombre" name="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
                             </div>
                         </div>
-
                         <div class="mb-3 inputFormSingle">
                             <label for="basic-url" class="form-label">Apellido:</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"  style="color: #a3a3a3;"></i></span>
-                                <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre" aria-describedby="basic-addon1" required>
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill" style="color: #a3a3a3;"></i></span>
+                                <input type="text" class="form-control" placeholder="" id="apellido" name="apellido" aria-label="apellido" aria-describedby="basic-addon1" required>
                             </div>
                         </div>
-
                     </div>
-
-                    
                     <div class="box-input-doble">
-
                         <div class="mb-3 inputFormSingle">
                             <label for="basic-url" class="form-label">Correo:</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1"> <i class="bi bi-envelope-fill"  style="color: #a3a3a3;"></i> </span>
-                                <input type="email" class="form-control" placeholder="" id="correo" aria-label="correo" aria-describedby="basic-addon1" required>
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope-fill" style="color: #a3a3a3;"></i></span>
+                                <input type="email" class="form-control" placeholder="" id="correo" name="correo" aria-label="correo" aria-describedby="basic-addon1" required>
                             </div>
                         </div>
-
-
                         <div class="mb-3 inputFormSingle">
                             <label for="basic-url" class="form-label">Teléfono:</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone-fill"  style="color: #a3a3a3;"></i></span>
-                                <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre"
-                                    aria-describedby="basic-addon1" maxlength="255" required>
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone-fill" style="color: #a3a3a3;"></i></span>
+                                <input type="text" class="form-control" placeholder="" id="telefono" name="telefono" aria-label="telefono" aria-describedby="basic-addon1" maxlength="255" required>
                             </div>
                         </div>
-
                     </div>
-
-                    
-
-
                     <div class="mb-3">
                         <label for="basic-url" class="form-label">Mensaje:</label>
                         <div class="input-group">
-                            <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-chat-left-text-fill"  style="color: #a3a3a3;"></i></label>
-                            <textarea class="form-control" placeholder="" id="descripcion" aria-label="descripcion"
-                                aria-describedby="basic-addon1" maxlength="255" required></textarea>
+                            <label class="input-group-text"><i class="bi bi-chat-left-text-fill" style="color: #a3a3a3;"></i></label>
+                            <textarea class="form-control" placeholder="" id="descripcion" name="descripcion" aria-label="descripcion" aria-describedby="basic-addon1" maxlength="255" required></textarea>
                         </div>
                     </div>
-
-
-
                     <div class="conatainerBotonFormularioModal">
-                        <button type="submit" value="Registrar" id="buttonRegistrarActividad"
-                            class="butonContactanos">Contáctanos</button>
+                        <button type="submit" name="submit_contact" value="Contactanos" id="buttonEnviarMensajeContacto" class="butonContactanos">Contáctanos</button>
                     </div>
-
                 </form>
+
 
             </div>
 
@@ -121,6 +107,65 @@ include('public/header.php');
     </div>
 
 </div>
+
+
+<?php
+
+if(isset($_POST['submit_contact'])) {
+    // Capture form data
+    $nombre = $_POST['nombre'] ?? '';
+    $apellido = $_POST['apellido'] ?? '';
+    $correo = $_POST['correo'] ?? '';
+    $telefono = $_POST['telefono'] ?? '';
+    $mensaje = $_POST['descripcion'] ?? '';
+
+    // Basic validation
+    if(empty($nombre) || empty($apellido) || empty($correo) || empty($mensaje)) {
+        echo "<script>alert('Por favor complete todos los campos requeridos.');</script>";
+    } else {
+       
+        echo "<script>
+            console.log('Nombre: " . $nombre . "');
+            console.log('Apellido: " . $apellido . "');
+            console.log('Correo: " . $correo . "');
+            console.log('Teléfono: " . $telefono . "');
+            console.log('Mensaje: " . $mensaje . "');
+        </script>";
+
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'alejandrovc177@gmail.com';
+        $mail->Password = 'izcb kowq obmi omai';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
+
+        $mail->setFrom('alejandrovc177@gmail.com');
+        $mail->addAddress('alejandrovc6467@gmail.com');
+        $mail->isHTML(true);
+        $mail->Subject = 'Mensajes Anonimos (New Entry)';
+
+        $mail->Body = '
+        <html>
+        <head>
+            <title>Alguien ingreso al sitio</title>
+        </head>
+        <body>
+            <h2>Detalles del ingreso:</h2>
+            <p><strong>Fecha y Hora:</strong> ' . $nombre . '</p>
+            <p><strong>IP:</strong> ' . $nombre . '</p>
+            <p><strong>Agente de Usuario:</strong> ' . $nombre . '</p>
+        </body>
+        </html>';
+
+        $mail->send();
+
+    }
+}
+
+?>
 
 
 
