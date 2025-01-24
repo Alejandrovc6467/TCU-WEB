@@ -1,3 +1,4 @@
+
 <?php
 include('public/header.php');
 
@@ -109,6 +110,11 @@ require 'phpmailer/src/SMTP.php';
 </div>
 
 
+
+
+
+
+
 <?php
 
 if(isset($_POST['submit_contact'])) {
@@ -123,14 +129,6 @@ if(isset($_POST['submit_contact'])) {
     if(empty($nombre) || empty($apellido) || empty($correo) || empty($mensaje)) {
         echo "<script>alert('Por favor complete todos los campos requeridos.');</script>";
     } else {
-       
-        echo "<script>
-            console.log('Nombre: " . $nombre . "');
-            console.log('Apellido: " . $apellido . "');
-            console.log('Correo: " . $correo . "');
-            console.log('Teléfono: " . $telefono . "');
-            console.log('Mensaje: " . $mensaje . "');
-        </script>";
 
 
         $mail = new PHPMailer(true);
@@ -145,18 +143,21 @@ if(isset($_POST['submit_contact'])) {
         $mail->setFrom('alejandrovc177@gmail.com');
         $mail->addAddress('alejandrovc6467@gmail.com');
         $mail->isHTML(true);
-        $mail->Subject = 'Mensajes Anonimos (New Entry)';
+        $mail->Subject = 'Sitio web de TCU TC-768';
 
         $mail->Body = '
         <html>
         <head>
-            <title>Alguien ingreso al sitio</title>
+            <title>Alguien quiere obtener más información</title>
         </head>
         <body>
-            <h2>Detalles del ingreso:</h2>
-            <p><strong>Fecha y Hora:</strong> ' . $nombre . '</p>
-            <p><strong>IP:</strong> ' . $nombre . '</p>
-            <p><strong>Agente de Usuario:</strong> ' . $nombre . '</p>
+            <h2>Detalles del mensaje:</h2>
+            <p><strong>Nombre:</strong> ' . $nombre . '</p>
+            <p><strong>Apellidos:</strong> ' . $apellido . '</p>
+            <p><strong>Correo:</strong> ' . $correo . '</p>
+            <p><strong>Teléfono:</strong> ' . $telefono . '</p>
+            <p><strong>Mensaje:</strong></p>
+            <p>' . $mensaje . '</p>
         </body>
         </html>';
 
