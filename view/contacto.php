@@ -55,7 +55,7 @@ require 'phpmailer/src/SMTP.php';
 
             <div class="formulario_container_contacto">
 
-                <form id="enviarMensajeContacto" method="POST">
+                <form id="enviarMensajeContacto">
                     <div class="box-input-doble">
                         <div class="mb-3 inputFormSingle">
                             <label for="basic-url" class="form-label">Nombre:</label>
@@ -92,7 +92,7 @@ require 'phpmailer/src/SMTP.php';
                         <label for="basic-url" class="form-label">Mensaje:</label>
                         <div class="input-group">
                             <label class="input-group-text"><i class="bi bi-chat-left-text-fill" style="color: #a3a3a3;"></i></label>
-                            <textarea class="form-control" placeholder="" id="descripcion" name="descripcion" aria-label="descripcion" aria-describedby="basic-addon1" maxlength="255" required></textarea>
+                            <textarea class="form-control" placeholder="" id="mensaje" name="mensaje" aria-label="mensaje" aria-describedby="basic-addon1" maxlength="255" required></textarea>
                         </div>
                     </div>
                     <div class="conatainerBotonFormularioModal">
@@ -112,66 +112,104 @@ require 'phpmailer/src/SMTP.php';
 
 
 
+<script>
+
+// Evento de submit del formulario
+document.getElementById('enviarMensajeContacto')
+    .addEventListener('submit', function (event) {
+        event.preventDefault();
+   
+    enviarMensaje();
+        
+});
 
 
-
-<?php
-
-if(isset($_POST['submit_contact'])) {
-    // Capture form data
-    $nombre = $_POST['nombre'] ?? '';
-    $apellido = $_POST['apellido'] ?? '';
-    $correo = $_POST['correo'] ?? '';
-    $telefono = $_POST['telefono'] ?? '';
-    $mensaje = $_POST['descripcion'] ?? '';
-
-    // Basic validation
-    if(empty($nombre) || empty($apellido) || empty($correo) || empty($mensaje)) {
-        echo "<script>alert('Por favor complete todos los campos requeridos.');</script>";
-    } else {
+function enviarMensaje(){
+    
+    const nombre = document.getElementById("nombre").value.trim();
+    const apellido = document.getElementById("apellido").value.trim();
+    const correo = document.getElementById("correo").value.trim();
+    const telefono = document.getElementById("telefono").value.trim();
+    const mensaje = document.getElementById("mensaje").value.trim();
 
 
-        try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'alejandrovc177@gmail.com';
-            $mail->Password = 'izcb kowq obmi omai';
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+    // Desactivar el botón mientras se procesa la solicitud AJAX
+    document.getElementById('enviarMensajeContacto').querySelector('button[type="submit"]').disabled = true;
 
-            $mail->setFrom('alejandrovc177@gmail.com');
-            $mail->addAddress('alejandrovc6467@gmail.com');
-            $mail->isHTML(true);
-            $mail->Subject = 'Sitio web de TCU TC-768';
+    var form_data = {
+        nombre: nombre,
+        apellido: apellido,
+        correo: correo,
+        telefono: telefono,
+        mensaje: mensaje
+    };
 
-            $mail->Body = '
-            <html>
-            <head>
-                <title>Alguien quiere obtener más información</title>
-            </head>
-            <body>
-                <h2>Detalles del mensaje:</h2>
-                <p><strong>Nombre:</strong> ' . $nombre . '</p>
-                <p><strong>Apellidos:</strong> ' . $apellido . '</p>
-                <p><strong>Correo:</strong> ' . $correo . '</p>
-                <p><strong>Teléfono:</strong> ' . $telefono . '</p>
-                <p><strong>Mensaje:</strong></p>
-                <p>' . $mensaje . '</p>
-            </body>
-            </html>';
+    console.log(form_data);
 
-            $mail->send();
-            $response = ['status' => 'success'];
-        } catch (Exception $e) {
-            $response = ['status' => 'error', 'message' => 'No se pudo enviar el correo. Error: ' . $mail->ErrorInfo];
+    
+    $.ajax({
+        type: "POST",
+        url: "view/enviarEmailContacto.php",
+        data: form_data,
+        dataType: "json",
+        success: function (response) {
+
+            console.log(response);
+
+            // Habilitar el botón después de recibir la respuesta del servidor
+            document.getElementById('enviarMensajeContacto').querySelector('button[type="submit"]').disabled = false;
+
+            // Verificar si la respuesta es exitosa
+            if (response.status === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Genial!',
+                    text: 'Nos pondremos en contacto contigo pronto.',
+                    confirmButtonColor: '#088cff'
+                });
+
+
+               //limpiar campos del formulario
+                document.getElementById("nombre").value = '';
+                document.getElementById("apellido").value = '';
+                document.getElementById("correo").value = '';
+                document.getElementById("telefono").value = '';
+                document.getElementById("mensaje").value = '';
+
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.message || 'Ocurrió un error, intenta nuevamente.',
+                    confirmButtonColor: '#088cff'
+                });
+            }
+
+            
+        },
+        error: function (xhr, status, error) {
+
+            console.log(xhr.responseText);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo conectar con el servidor. Por favor, intenta más tarde.',
+                confirmButtonColor: '#088cff'
+            });
+
+            // En caso de error, también habilitar el botón nuevamente
+            document.getElementById('enviarMensajeContacto').querySelector('button[type="submit"]').disabled = false;
         }
-
-    }
+    });
+    
 }
 
-?>
+</script>
+
+
+
 
 
 
