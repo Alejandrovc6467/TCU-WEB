@@ -131,37 +131,42 @@ if(isset($_POST['submit_contact'])) {
     } else {
 
 
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'alejandrovc177@gmail.com';
-        $mail->Password = 'izcb kowq obmi omai';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'alejandrovc177@gmail.com';
+            $mail->Password = 'izcb kowq obmi omai';
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port = 465;
 
-        $mail->setFrom('alejandrovc177@gmail.com');
-        $mail->addAddress('alejandrovc6467@gmail.com');
-        $mail->isHTML(true);
-        $mail->Subject = 'Sitio web de TCU TC-768';
+            $mail->setFrom('alejandrovc177@gmail.com');
+            $mail->addAddress('alejandrovc6467@gmail.com');
+            $mail->isHTML(true);
+            $mail->Subject = 'Sitio web de TCU TC-768';
 
-        $mail->Body = '
-        <html>
-        <head>
-            <title>Alguien quiere obtener más información</title>
-        </head>
-        <body>
-            <h2>Detalles del mensaje:</h2>
-            <p><strong>Nombre:</strong> ' . $nombre . '</p>
-            <p><strong>Apellidos:</strong> ' . $apellido . '</p>
-            <p><strong>Correo:</strong> ' . $correo . '</p>
-            <p><strong>Teléfono:</strong> ' . $telefono . '</p>
-            <p><strong>Mensaje:</strong></p>
-            <p>' . $mensaje . '</p>
-        </body>
-        </html>';
+            $mail->Body = '
+            <html>
+            <head>
+                <title>Alguien quiere obtener más información</title>
+            </head>
+            <body>
+                <h2>Detalles del mensaje:</h2>
+                <p><strong>Nombre:</strong> ' . $nombre . '</p>
+                <p><strong>Apellidos:</strong> ' . $apellido . '</p>
+                <p><strong>Correo:</strong> ' . $correo . '</p>
+                <p><strong>Teléfono:</strong> ' . $telefono . '</p>
+                <p><strong>Mensaje:</strong></p>
+                <p>' . $mensaje . '</p>
+            </body>
+            </html>';
 
-        $mail->send();
+            $mail->send();
+            $response = ['status' => 'success'];
+        } catch (Exception $e) {
+            $response = ['status' => 'error', 'message' => 'No se pudo enviar el correo. Error: ' . $mail->ErrorInfo];
+        }
 
     }
 }
