@@ -26,7 +26,7 @@ if(!empty($nombre) && !empty($apellido) && !empty($correo) && !empty($mensaje)) 
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'alejandrovc177@gmail.com';
-        $mail->Password = 'izcb kowq obmi omai';
+        $mail->Password = 'izcb kowq obmi iuuu';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
 
