@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /TCU-WEB/
+
+# Si el archivo o directorio existe, úsalo directamente
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirige todo lo demás al index.php
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

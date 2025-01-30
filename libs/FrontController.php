@@ -8,6 +8,15 @@ class FrontController
         require 'libs/View.php';
         require 'libs/configuration.php';
 
+        // Obtener la ruta actual
+        $request_uri = $_SERVER['REQUEST_URI'];
+        $base_path = '/TCU-WEB/';
+        
+        // Verificar si la URL termina en 'admin'
+        if (strpos($request_uri, $base_path . 'admin') !== false) {
+            header('Location: ' . $base_path . '?controlador=Index&accion=mostrarlogin');
+            exit;
+        }
 
 
         if (!empty($_GET['controlador']))
