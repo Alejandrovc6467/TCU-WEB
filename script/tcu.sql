@@ -22,9 +22,6 @@ END$$
 DELIMITER ;
 
 
-
-
-
 -- Tabla Usuario
 CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -68,11 +65,6 @@ CREATE TABLE imagen_proyecto  (
 );
 
 
-
-
-
-
-
 -- crud usuarios ********************************************************************************************************************
 
 
@@ -87,10 +79,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
-
-
 
 DELIMITER $$
 
@@ -127,10 +115,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
-
-
 
 DELIMITER $$
 
@@ -180,10 +164,6 @@ END$$
 
 DELIMITER ;
 
-
-
-
-
 DELIMITER $$
 
 CREATE PROCEDURE sp_eliminarUsuario(
@@ -218,14 +198,8 @@ END$$
 
 DELIMITER ;
 
-
-
-
-
-
-
-
 -- crud actividades ********************************************************************************************************************
+
 
 DELIMITER $$
 
@@ -328,7 +302,6 @@ BEGIN
                 SELECT 'No se realizaron cambios.' AS mensaje;
             END IF;
 
-
         END;
     END IF;
     
@@ -386,6 +359,220 @@ END$$
 
 DELIMITER ;
 
--- crud proyectos ********************************************************************************************************************
+
+-- crud proyectos y imagenes ********************************************************************************************************************
 
 
+DELIMITER $$
+
+-- Obtener todos los proyectos no eliminados
+DROP PROCEDURE IF EXISTS sp_obtenerProyectos$$
+
+CREATE PROCEDURE sp_obtenerProyectos()
+BEGIN
+
+    SELECT 
+        id, 
+        nombre, 
+        descripcion, 
+        fecha, 
+        id_usuario
+    FROM proyecto
+    WHERE eliminado = FALSE;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Obtener todas las imagenes de un proyecto no eliminado
+DROP PROCEDURE IF EXISTS sp_obtenerImagenesProyectos$$
+
+CREATE PROCEDURE sp_obtenerImagenesProyectos(
+    IN p_id INT
+)
+BEGIN
+
+    SELECT 
+        url_archivo
+    FROM imagen_proyecto
+    WHERE id_proyecto = p_id AND eliminado = FALSE;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS sp_insertarProyecto$$
+
+CREATE PROCEDURE sp_insertarProyecto(
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT
+)
+BEGIN
+    DECLARE usuario_existente INT;
+    DECLARE error_occurred BOOLEAN DEFAULT FALSE;
+
+    -- verificar que el usuario a ingresar exista en la tabla de usuarios, filtrando por id de dicho usuario
+    SELECT COUNT(*) INTO usuario_existente FROM Usuario WHERE id = p_id_usuario AND eliminado = TRUE;
+
+    IF  usuario_existente > 0 THEN
+        -- mensaje de error si el usuario no existe
+        SELECT 'Ocurrió un error el usuario no existe.' AS mensaje;
+    ELSE
+        BEGIN
+            -- en caso de que todo sea correcto se insertan los datos
+            INSERT INTO Proyecto ( nombre, descripcion, fecha, id_usuario, eliminado ) 
+            VALUES ( p_nombre, p_descripcion, NOW(), p_id_usuario, FALSE );
+            SELECT 'Proyecto ingresado con exito.' AS mensaje, LAST_INSERT_ID() AS id;
+        END;
+    END IF;
+    
+    -- Manejo de excepciones
+    IF error_occurred THEN
+        SELECT 'Ocurrió un error al insertar el proyecto.' AS mensaje;
+        ROLLBACK;
+    END IF;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Insertar una nueva imagen en un proyecto
+DROP PROCEDURE IF EXISTS sp_insertarImagenProyecto$$
+
+CREATE PROCEDURE sp_insertarImagenProyecto(
+    IN p_url_archivo VARCHAR(255),
+    IN p_id_proyecto INT
+)
+BEGIN
+    DECLARE proyecto_existente INT;
+    DECLARE error_occurred BOOLEAN DEFAULT FALSE;
+
+    -- Verificar si el proyecto existe
+    SELECT COUNT(*) INTO proyecto_existente FROM proyecto WHERE id = p_id_proyecto;
+
+    IF proyecto_existente = 0 THEN
+        SELECT 'Error: El proyecto no existe.' AS mensaje;
+    ELSE
+        BEGIN
+            INSERT INTO imagen_proyecto (url_archivo, id_proyecto, eliminado)
+            VALUES (p_url_archivo, p_id_proyecto, FALSE);
+            SELECT 'Imagen agregada con éxito.' AS mensaje;
+        END;
+    END IF;
+
+    -- Manejo de excepciones
+    IF error_occurred THEN
+        SELECT 'Ocurrió un error al insertar la imagen.' AS mensaje;
+    END IF;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Actualizar un proyecto existente
+DROP PROCEDURE IF EXISTS sp_actualizarProyecto$$
+
+CREATE PROCEDURE sp_actualizarProyecto(
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT
+)
+BEGIN
+    DECLARE proyecto_existente INT;
+    DECLARE error_occurred BOOLEAN DEFAULT FALSE;
+
+    -- Verificar si el proyecto existe
+    SELECT COUNT(*) INTO proyecto_existente FROM proyecto WHERE id = p_id;
+
+    IF proyecto_existente = 0 THEN
+        SELECT 'Error: El proyecto no existe.' AS mensaje;
+    ELSE
+        UPDATE Proyecto
+        SET nombre = p_nombre,
+            descripcion = p_descripcion,
+            id_usuario = p_id_usuario
+        WHERE id = p_id;
+
+        -- Verificar si la actualización afectó filas
+        IF ROW_COUNT() > 0 THEN
+            UPDATE Proyecto
+            SET fecha = NOW()
+            WHERE id = p_id;
+
+            SELECT 'Actualización exitosa.' AS mensaje;
+        ELSE
+            SELECT 'No se realizaron cambios.' AS mensaje;
+        END IF;
+    
+    END IF;
+
+    -- Manejo de excepciones
+    IF error_occurred THEN
+        SELECT 'Ocurrió un error al actualizar el proyecto.' AS mensaje;
+        ROLLBACK;
+    END IF;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+-- Eliminar (desactivar) un proyecto
+DROP PROCEDURE IF EXISTS sp_eliminarProyecto$$
+
+CREATE PROCEDURE sp_eliminarProyecto(
+    IN p_id INT
+)
+BEGIN
+    DECLARE proyecto_existente INT;
+    DECLARE eliminado_anterior BOOLEAN;
+    DECLARE error_occurred BOOLEAN DEFAULT FALSE;
+
+    -- Verificar si el proyecto existe y si ya está eliminado
+    SELECT COUNT(*), eliminado INTO proyecto_existente, eliminado_anterior 
+    FROM proyecto WHERE id = p_id;
+
+    START TRANSACTION;-- se utilizan transacciones para que la eliminacion del proyecto y sus imagenes sea un todo
+
+    IF proyecto_existente = 0 THEN
+        -- Mensaje de error si el proyecto no existe
+        SELECT 'El proyecto no existe.' AS mensaje;
+    ELSEIF eliminado_anterior = TRUE THEN
+        -- Mensaje si el proyecto ya fue eliminado
+        SELECT 'El proyecto ya está eliminado.' AS mensaje;
+    ELSE
+        BEGIN 
+            -- Marcar el proyecto como eliminado
+            UPDATE proyecto
+            SET eliminado = TRUE
+            WHERE id = p_id;
+
+            UPDATE imagen_proyecto
+            SET eliminado = TRUE
+            WHERE id_proyecto = p_id;
+
+            SELECT 'Proyecto eliminado exitosamente.' AS mensaje;
+            COMMIT;
+        END;
+    END IF;
+    
+    -- Manejo de excepciones
+    IF error_occurred THEN
+        SELECT 'Ocurrió un error al eliminar el proyecto.' AS mensaje;
+        ROLLBACK;
+    END IF;
+
+END$$
+
+DELIMITER ;

@@ -37,10 +37,10 @@ include('public/header.php');
             <div class="mb-3">
                 <label for="basic-url" class="form-label">Ingrese imagenes para el proyecto:</label>
                 <div class="input-group">
-                    <label class="input-group-text" for="imagenProyecto">
+                    <label class="input-group-text" for="imagenesProyecto">
                         <i class="bi bi-file-earmark-arrow-up-fill" style="color: #a3a3a3;"></i>
                     </label>
-                    <input class="form-control" type="file" id="imagenProyecto" name="imagenProyecto" required>
+                    <input class="form-control" type="file" id="imagenesProyecto" name="imagenesProyecto" multiple required>
                 </div>
                 <!-- Contenedor para la vista previa -->
                 <div id="vistaPrevia" class="mt-3">
