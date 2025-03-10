@@ -17,23 +17,23 @@ class ProyectoModel
         $consulta = $this->db->query('CALL sp_obtenerProyectos()');
         $proyectos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         $consulta->closeCursor();
-    
+
         // Recorrer cada proyecto para obtener sus imágenes
         foreach ($proyectos as &$proyecto) {
             $consultaImagenes = $this->db->prepare('CALL sp_obtenerImagenesProyectos(?)');
             $consultaImagenes->bindParam(1, $proyecto['id'], PDO::PARAM_INT);
             $consultaImagenes->execute();
-            
+
             // Obtener todas las imágenes del proyecto actual
             $imagenes = $consultaImagenes->fetchAll(PDO::FETCH_ASSOC);
             $consultaImagenes->closeCursor();
-            
+
             // Agregar las imágenes al proyecto
             $proyecto['imagenes'] = array_column($imagenes, 'url_archivo'); // Extraer solo las URLs
         }
-    
+
         return $proyectos;
-    }    
+    }
 
     public function insertarProyecto($nombre, $descripcion, $id_usuario, $imagenes_guardadas)
     {
@@ -81,18 +81,49 @@ class ProyectoModel
         }
     }
 
-    public function actualizarActividad($id, $url_archivo, $nombre, $descripcion, $id_usuario)
+    public function actualizarProyecto($id, $nombre, $descripcion, $id_usuario, $imagenes_guardadas)
     {
-        $consulta = $this->db->prepare('CALL sp_actualizarActividad( ?, ?, ?, ?, ? )');
-        $consulta->bindParam(1, $id);
-        $consulta->bindParam(2, $url_archivo, $url_archivo !== null ? PDO::PARAM_STR : PDO::PARAM_NULL);
-        $consulta->bindParam(3, $nombre);
-        $consulta->bindParam(4, var: $descripcion);
-        $consulta->bindParam(5, $id_usuario);
-        $consulta->execute();
-        $resultado = $consulta->fetchAll();
-        $consulta->closeCursor();
-        return $resultado;
+        try {
+            // Iniciar la transacción
+            $this->db->beginTransaction();
+
+            // Llamar al procedimiento almacenado para actualizar el proyecto
+            $consulta = $this->db->prepare('CALL sp_actualizarProyecto(?, ?, ?, ?)');
+            $consulta->bindParam(1, $id, PDO::PARAM_INT);
+            $consulta->bindParam(2, $nombre, PDO::PARAM_STR);
+            $consulta->bindParam(3, $descripcion, PDO::PARAM_STR);
+            $consulta->bindParam(4, $id_usuario, PDO::PARAM_INT);
+            $consulta->execute();
+
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+            $consulta->closeCursor();
+
+            // Verificar si hubo un error en la actualización
+            if (!$resultado || ($resultado['mensaje'] !== 'Actualización exitosa.' && $resultado['mensaje'] !== 'No se realizaron cambios en nombre y descripcion.')) {
+                throw new Exception($resultado['mensaje'] ?? 'Error desconocido.');
+            }
+
+            // Si hay imágenes nuevas, insertarlas en la BD
+            if (!empty($imagenes_guardadas)) {
+                $consultaImagen = $this->db->prepare('CALL sp_insertarImagenProyecto(?, ?)');
+
+                foreach ($imagenes_guardadas as $imagen) {
+                    $consultaImagen->bindParam(1, $imagen, PDO::PARAM_STR);
+                    $consultaImagen->bindParam(2, $id, PDO::PARAM_INT);
+                    $consultaImagen->execute();
+                    $consultaImagen->closeCursor();
+                }
+            }
+
+            // Confirmar la transacción
+            $this->db->commit();
+            return $resultado['mensaje'];
+
+        } catch (Exception $e) {
+            // Revertir la transacción en caso de error
+            $this->db->rollBack();
+            return "Error en la transacción: " . $e->getMessage();
+        }
     }
 
     public function eliminarProyecto($id)

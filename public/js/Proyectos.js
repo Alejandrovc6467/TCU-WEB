@@ -46,15 +46,15 @@ function obtenerProyectos() {
                     .html('<span class="material-icons">edit_document</span> ')
                     .addClass("butonEditar")
                     .data("id", proyecto.id)
-                    .data("url_archivo", proyecto.url_archivo)
                     .data("nombre", proyecto.nombre)
                     .data("descripcion", proyecto.descripcion)
+                    .data("url_archivos", proyecto.imagenes)
                     .on("click", function () {
                         editarActividad(
                             $(this).data("id"),
-                            $(this).data("url_archivo"),
                             $(this).data("nombre"),
-                            $(this).data("descripcion")
+                            $(this).data("descripcion"),
+                            $(this).data("url_archivos")
                         );
                     });
 
@@ -72,7 +72,7 @@ function obtenerProyectos() {
                 row.append($("<td>").text(proyecto.nombre));
                 row.append($("<td>").text(proyecto.descripcion));
                 row.append($("<td>").text(proyecto.fecha));
-                
+
                 var imagenes = document.createElement("td");
 
                 proyecto.imagenes.forEach(url_archivo => {
@@ -170,7 +170,7 @@ function agregarProyecto() {
 }
 
 // Función para cargar los datos a editar al formulario
-function editarActividad(id, url_archivo, nombre, descripcion) {
+function editarActividad(id, nombre, descripcion, url_archivos) {
     // Enter edit mode
     isEditMode = true;
     editProyectoId = id;
@@ -182,8 +182,8 @@ function editarActividad(id, url_archivo, nombre, descripcion) {
     }
 
     // Change button text and style
-    const submitButton = document.getElementById('buttonRegistrarActividad');
-    submitButton.textContent = 'Actualizar Actividad';
+    const submitButton = document.getElementById('buttonRegistrarProyecto');
+    submitButton.textContent = 'Actualizar Proyecto';
     submitButton.classList.remove('btn-primary');
     submitButton.classList.add('btn-warning');
 
@@ -201,8 +201,8 @@ function editarActividad(id, url_archivo, nombre, descripcion) {
     // Fill form fields
     document.getElementById('nombre').value = nombre;
     document.getElementById('descripcion').value = descripcion;
-    document.getElementById('imagenActividad').required = false;
-    mostrarVistaPreviaDesdeURL(url_archivo);
+    document.getElementById('imagenesProyecto').required = false;
+    mostrarVistaPreviaDesdeURL(url_archivos);
 }
 
 // función para cancelar la edición
@@ -215,8 +215,8 @@ function cancelEdit() {
     editProyectoId = null;
 
     // Restore button
-    const submitButton = document.getElementById('buttonRegistrarActividad');
-    submitButton.textContent = 'Agregar Actividad';
+    const submitButton = document.getElementById('buttonRegistrarProyecto');
+    submitButton.textContent = 'Agregar Proyecto';
     submitButton.classList.remove('btn-warning');
     submitButton.classList.add('btn-primary');
 
@@ -226,7 +226,7 @@ function cancelEdit() {
         cancelButton.remove();
     }
 
-    document.getElementById('imagenActividad').required = true;
+    document.getElementById('imagenesProyecto').required = true;
 };
 
 // Función para actualizar una actividad
@@ -234,21 +234,25 @@ function actualizarProyecto() {
     // Se obtienen los valores introducidos en el formulario
     const nombre = document.getElementById("nombre").value.trim();
     const descripcion = document.getElementById("descripcion").value.trim();
-    const imagen = document.getElementById("imagenActividad").files[0];
+    const imagenes = document.getElementById("imagenesProyecto").files;
 
     // Desactivar el botón mientras se procesa la solicitud AJAX
-    document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = true;
+    document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = true;
 
     // Crear un objeto FormData para enviar archivos y datos
     var form_data = new FormData();
     form_data.append("id", editProyectoId); // Agregar el id de la actividad
     form_data.append("nombre", nombre); // Agregar el nombre
     form_data.append("descripcion", descripcion); // Agregar la descripción
-    form_data.append("archivo", imagen); // Agregar la imagen (archivo)
+
+    // 📌 Agregar cada archivo individualmente
+    for (let i = 0; i < imagenes.length; i++) {
+        form_data.append("archivos[]", imagenes[i]);  // El nombre del input debe terminar en []
+    }
 
     console.log(form_data);
     $.ajax({
-        url: "?controlador=Actividades&accion=modificarActividad",
+        url: "?controlador=Proyectos&accion=modificarProyecto",
         type: "POST",
         data: form_data,
         dataType: "json",
@@ -258,7 +262,7 @@ function actualizarProyecto() {
             console.log(response);
 
             // Habilitar el botón
-            document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
+            document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = false;
 
             if (response[0]["mensaje"] === 'Actualización exitosa.') {
                 limpiarCamposFormulario();
@@ -272,7 +276,7 @@ function actualizarProyecto() {
 
                 // Salir del modo de edición
                 cancelEdit();
-            } else if (response[0]["mensaje"] === 'No se realizaron cambios.') {
+            } else if (response[0]["mensaje"] === 'No se realizaron cambios en nombre y descripcion.') {
                 Swal.fire({
                     icon: 'info',
                     title: 'Información',
@@ -301,7 +305,7 @@ function actualizarProyecto() {
             console.log(error, xhr, status);
 
             // Habilitar el botón en caso de error
-            document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
+            document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = false;
 
         }
     });
@@ -383,7 +387,7 @@ const limpiarCamposFormulario = () => {
 // funcion auxiliar para cargar una vista previa de las imagenes para una nueva actividad
 function mostrarVistaPreviaDesdeInput(archivos) {
     var vistaPrevia = document.getElementById("vistaPrevia"); // Contenedor para la vista previa
-    vistaPrevia.innerHTML = ""; // Limpiar cualquier contenido previo
+    if (!isEditMode) vistaPrevia.innerHTML = ""; // Limpiar cualquier contenido previo si no esta en modo de edicion
 
     if (archivos["length"] > 0) {
 
@@ -411,21 +415,24 @@ function mostrarVistaPreviaDesdeInput(archivos) {
 }
 
 // funcion auxiliar para cargar una vista previa de las imagenes para editar
-function mostrarVistaPreviaDesdeURL(url) {
+function mostrarVistaPreviaDesdeURL(url_archivos) {
     var vistaPrevia = document.getElementById("vistaPrevia"); // Contenedor para la vista previa
-    vistaPrevia.innerHTML = ""; // Limpiar cualquier contenido previo
+    if (!isEditMode) vistaPrevia.innerHTML = ""; // Limpiar cualquier contenido previo
 
-    if (url.trim() !== "") {
-        var img = document.createElement("img");
-        img.src = url; // Usar la URL proporcionada
-        img.alt = "Vista previa de la imagen";
-        img.style.maxWidth = "200px";
-        img.style.height = "auto";
-        img.className = "img-thumbnail";
-        vistaPrevia.appendChild(img);
-    } else {
-        vistaPrevia.innerHTML = "<p class='text-danger'>Proporciona una URL válida.</p>";
-    }
+    url_archivos.forEach(url => {
+        if (url.trim() !== "") {
+            var img = document.createElement("img");
+            img.src = url; // Usar la URL proporcionada
+            img.alt = "Vista previa de la imagen";
+            img.style.maxWidth = "200px";
+            img.style.height = "auto";
+            img.className = "img-thumbnail";
+            vistaPrevia.appendChild(img);
+        } else {
+            vistaPrevia.innerHTML = "<p class='text-danger'>Proporciona una URL válida.</p>";
+        }
+    });
+
 }
 
 // Inicializar la obtención de usuarios para cargar la tabla al ingresar

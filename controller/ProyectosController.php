@@ -126,108 +126,83 @@ class ProyectosController
         return $respuesta;
     }
 
-    public function modificarActividad()
+    public function modificarProyecto()
     {
-        // verifica que exita un archivo para actualizar adjunto en el formulario
-        if (isset($_FILES['archivo'])) {
+        // Verificar si la sesión está iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['id'])) {
+            echo json_encode([["mensaje" => "Usuario no autenticado."]]);
+            exit;
+        }
+        $id_usuario = $_SESSION['id'];
 
-            // se extrae el archivo enviado
-            $archivo = $_FILES['archivo'];
+        // Verificar si se recibió el ID del proyecto
+        if (!isset($_POST['id']) || empty($_POST['id'])) {
+            echo json_encode([["mensaje" => "ID del proyecto no especificado."]]);
+            exit;
+        }
+        $id_proyecto = $_POST['id'];
 
-            // extenciones permitidas
-            $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
+        // Obtener nombre y descripción
+        $nombre = $_POST['nombre'] ?? '';
+        $descripcion = $_POST['descripcion'] ?? '';
 
-            //respuesta en caso de un fromato de extencion invalido
-            $respuesta = [
-                [
-                    "mensaje" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . ".",
-                    "0" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . "."
-                ]
-            ];
+        // Extensiones permitidas para imágenes
+        $extensiones_permitidas = ['png', 'jpg', 'jpeg', 'svg', 'webp'];
 
-            if ($this->verificarExtencionesPermitidas($archivo, $extension_permitida)) {
+        // Procesar imágenes si se enviaron
+        $imagenes_guardadas = [];
+        if (!empty($_FILES['archivos']['name'][0])) {
+            if (!$this->verificarExtensionesPermitidas($_FILES['archivos'], $extensiones_permitidas)) {
+                echo json_encode([["mensaje" => "Al menos una imagen tiene un formato no permitido."]]);
+                exit;
+            }
 
-                // se extrae la ruta temporal del archivo
-                $rutaTemporal = $archivo['tmp_name'];
+            foreach ($_FILES['archivos']['tmp_name'] as $key => $tmp_name) {
+                // Obtener nombre único para el archivo
+                $rutaDestino = $this->definirNombreDeArchivoUnico($_FILES['archivos']['name'][$key]);
 
-                // se define la nueva ruta del archivo 
-                $rutaDestino = $this->definirNombreDeArchivoUnico($archivo);
-
-                //verificar que se pueda subir el documento correctamente
-                if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
-
-                    //verificar si la sescion esta iniciada para tomar el id de usuario
-                    if (session_status() === PHP_SESSION_NONE) {
-                        session_start();
-                    }
-                    $id_usuario = $_SESSION['id'];
-                    if (!isset($_SESSION['id'])) {
-                        die("Error: ID de usuario no está configurado en la sesión.");
-                    }
-
-                    $respuesta = $this->actualizarActividad(
-                        $_POST['id'],
-                        $rutaDestino,
-                        $_POST['nombre'],
-                        $_POST['descripcion'],
-                        $id_usuario
-                    );
-
+                // Intentar mover el archivo a la ruta de destino
+                if ($this->subirImagen($tmp_name, $rutaDestino)) {
+                    $imagenes_guardadas[] = $rutaDestino;
                 } else {
-                    $respuesta = [
-                        [
-                            'message' => 'Ocurrió un error, al enviar el documento, intente de nuevo.',
-                            '0' => 'Ocurrió un error, al enviar el documento, intente de nuevo.'
-                        ]
-                    ];
+                    echo json_encode([["mensaje" => "Error al subir la imagen: " . $_FILES['archivos']['name'][$key]]]);
+                    exit;
                 }
-
             }
-
-            //se devuelve el contenido de la respuesta como un json
-            header('Content-Type: application/json');
-            echo json_encode($respuesta);
-            exit;
-
-        } else {
-            //verificar si la sescion esta iniciada para tomar el id de usuario
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-            $id_usuario = $_SESSION['id'];
-            if (!isset($_SESSION['id'])) {
-                die("Error: ID de usuario no está configurado en la sesión.");
-            }
-
-            $respuesta = $this->actualizarActividad(
-                $_POST['id'],
-                null,
-                $_POST['nombre'],
-                $_POST['descripcion'],
-                $id_usuario
-            );
-
-            //se devuelve el contenido de la respuesta como un json
-            header('Content-Type: application/json');
-            echo json_encode($respuesta);
-            exit;
-
         }
 
+        // Llamar al método del modelo para actualizar el proyecto
+        $respuesta = $this->actualizarProyecto($id_proyecto, $nombre, $descripcion, $id_usuario, $imagenes_guardadas);
+
+        $respuesta = [
+            [
+                'mensaje' => $respuesta,
+                '0' => $respuesta
+            ]
+        ];
+
+        //se devuelve el contenido de la respuesta como un json
+        header('Content-Type: application/json');
+        // Responder con éxito o error
+        echo json_encode($respuesta);
+        exit;
     }
 
-    public function actualizarActividad($id, $url_archivo, $nombre, $descripcion, $id_usuario)
+    public function actualizarProyecto($id, $nombre, $descripcion, $id_usuario, $imagenes_guardadas)
     {
-        require 'model/ActividadModel.php';
-        $actividadModel = new ActividadModel();
+        require 'model/ProyectoModel.php';
+        $proyectoModel = new ProyectoModel();
 
         //se ejecuta el metodo para guardar el usuario en base de datos
-        $respuesta = $actividadModel->actualizarActividad(
+        $respuesta = $proyectoModel->actualizarProyecto(
             $id,
-            $url_archivo,
             $nombre,
             $descripcion,
-            $id_usuario
+            $id_usuario,
+            $imagenes_guardadas
         );
 
         return $respuesta;
@@ -286,7 +261,7 @@ class ProyectosController
             }
         }
         return true; // Si todas las imágenes son válidas, retorna true
-    }    
+    }
 
     private function subirdocumento()
     {

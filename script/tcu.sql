@@ -495,7 +495,7 @@ BEGIN
     SELECT COUNT(*) INTO proyecto_existente FROM proyecto WHERE id = p_id;
 
     IF proyecto_existente = 0 THEN
-        SELECT 'Error: El proyecto no existe.' AS mensaje;
+        SELECT 'El proyecto no existe.' AS mensaje;
     ELSE
         UPDATE Proyecto
         SET nombre = p_nombre,
@@ -511,7 +511,7 @@ BEGIN
 
             SELECT 'Actualización exitosa.' AS mensaje;
         ELSE
-            SELECT 'No se realizaron cambios.' AS mensaje;
+            SELECT 'No se realizaron cambios en nombre y descripcion.' AS mensaje;
         END IF;
     
     END IF;
