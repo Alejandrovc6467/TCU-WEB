@@ -207,8 +207,159 @@
                     <p class="feature__description">Elaborar un manual a través de la recopilación de información obtenida en las charlas y talleres, que sirva a los participantes beneficiarios como referencia sobre el tema de buenas prácticas empresariales según su línea de acción.</p>
                 </div>
             </li>
-        </ul>
+      </ul>
+</div>
+
+
+
+
+
+<div class="proyectos_front_container">
+
+  <div class="cabecera_proyectos_front_container">
+    <h2>Proyectos</h2>
+    <p>A continuación, se presenta un listado de los proyectos desarrollados en el TCU. Estos proyectos han sido realizados con el objetivo de fomentar el desarrollo de nuestra comunidad.</p>
+  </div>
+
+  <div class="carrusel_proyectos_container">
+    <button class="prev_proyecto">❮</button>
+    <div class="carrusel_proyectos">
+      <!-- Proyectos cargados dinámicamente -->
     </div>
+    <button class="next_proyecto">❯</button>
+  </div>
+
+  <!-- Modal para mostrar imágenes del proyecto -->
+  <div id="modal_proyecto" class="modal">
+    <div class="modal-content-proyectos">
+
+      <span class="close">&times;</span>
+
+      <div class="informacion_proyecto_modal">
+        <h3 class="nombre_proyecto_modal">Talleres a indígenas de Turrialba</h3>
+        <p class="descripcion_proyecto_modal">En este taller se les dieron a las indígenas diferentes herramientas para que puedan aprender sobre el uso de la tecnología y la gestión de un negocio.</p>
+      </div>
+
+      <div class="carrusel_modal">
+        <button class="prev_img_modal">❮</button>
+          <div class="imagenes_modal">
+            <!-- Imágenes del proyecto -->
+          </div>
+          <button class="next_img_modal">❯</button>
+      </div>
+
+    </div>
+  
+  </div>
+
+</div>
+
+
+
+
+<script>
+    let indiceProyecto = 0;
+
+    function obtenerProyectosParaFrontEnd() {
+        $.ajax({
+            type: "POST",
+            url: "?controlador=Proyectos&accion=obtenerProyectos",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                let carrusel = $(".carrusel_proyectos");
+                carrusel.empty();
+
+                response.forEach(proyecto => {
+                    let proyectoHTML = `
+                        <div class="proyecto">
+                            <img src="${proyecto.imagenes[0]}" alt="${proyecto.nombre}">
+                            <div class="info_proyecto">
+                                <div class="info_texto">
+                                    <h3>${proyecto.nombre}</h3>
+                                    <p>${proyecto.descripcion}</p>
+                                </div>
+                                <button class="ver_mas" data-imagenes='${JSON.stringify(proyecto.imagenes)}'>Ver más</button>
+                            </div>
+                        </div>
+                    `;
+                    carrusel.append(proyectoHTML);
+                });
+
+                mostrarProyecto(indiceProyecto);
+
+                $(".ver_mas").click(function () {
+                    let imagenes = JSON.parse($(this).attr("data-imagenes"));
+                    let modalCarrusel = $(".imagenes_modal");
+                    modalCarrusel.empty();
+
+                    imagenes.forEach((img, i) => {
+                        modalCarrusel.append(`<img src="${img}" style="display: ${i === 0 ? 'block' : 'none'};">`);
+                    });
+
+                    $("#modal_proyecto").fadeIn();
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(error, xhr, status);
+            }
+        });
+    }
+
+    function mostrarProyecto(indice) {
+        let proyectos = $(".proyecto");
+        proyectos.hide();
+        $(proyectos[indice]).show();
+    }
+
+    $(".prev_proyecto").click(function () {
+        let proyectos = $(".proyecto");
+        if (indiceProyecto > 0) {
+            indiceProyecto--;
+        } else {
+            indiceProyecto = proyectos.length - 1;
+        }
+        mostrarProyecto(indiceProyecto);
+    });
+
+    $(".next_proyecto").click(function () {
+        let proyectos = $(".proyecto");
+        if (indiceProyecto < proyectos.length - 1) {
+            indiceProyecto++;
+        } else {
+            indiceProyecto = 0;
+        }
+        mostrarProyecto(indiceProyecto);
+    });
+
+    $(".close").click(function () {
+        $("#modal_proyecto").fadeOut();
+    });
+
+    $(".prev_img_modal").click(function () {
+        let actual = $(".imagenes_modal img:visible");
+        let anterior = actual.prev("img");
+        if (anterior.length) {
+            actual.hide();
+            anterior.show();
+        }
+    });
+
+    $(".next_img_modal").click(function () {
+        let actual = $(".imagenes_modal img:visible");
+        let siguiente = actual.next("img");
+        if (siguiente.length) {
+            actual.hide();
+            siguiente.show();
+        }
+    });
+
+    obtenerProyectosParaFrontEnd();
+</script>
+
+
+
+
 
 
 
