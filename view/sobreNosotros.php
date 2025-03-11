@@ -279,7 +279,7 @@
                                     <h3>${proyecto.nombre}</h3>
                                     <p>${proyecto.descripcion}</p>
                                 </div>
-                                <button class="ver_mas" data-imagenes='${JSON.stringify(proyecto.imagenes)}'>Ver más</button>
+                                <button class="ver_mas" data-imagenes='${JSON.stringify(proyecto.imagenes)}' data-nombre='${JSON.stringify(proyecto.nombre)}' data-descripcion='${JSON.stringify(proyecto.descripcion)}' >Ver más</button>
                             </div>
                         </div>
                     `;
@@ -290,12 +290,19 @@
 
                 $(".ver_mas").click(function () {
                     let imagenes = JSON.parse($(this).attr("data-imagenes"));
+                    let nombre = JSON.parse($(this).attr("data-nombre"));
+                    let descripcion = JSON.parse($(this).attr("data-descripcion"));
+
                     let modalCarrusel = $(".imagenes_modal");
                     modalCarrusel.empty();
 
                     imagenes.forEach((img, i) => {
                         modalCarrusel.append(`<img src="${img}" style="display: ${i === 0 ? 'block' : 'none'};">`);
                     });
+
+                    // Cargar nombre y descripción en el modal
+                    $(".nombre_proyecto_modal").text(nombre);
+                    $(".descripcion_proyecto_modal").text(descripcion);
 
                     $("#modal_proyecto").fadeIn();
                 });

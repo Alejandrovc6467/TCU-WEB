@@ -405,9 +405,15 @@
         width: 35%;
         color: white;
         display: flex;
-        align-items: center;
         flex-direction: column;
         justify-content: center;
+        padding: 10px;
+        
+    }
+
+    .informacion_proyecto_modal h3{
+   
+        margin-bottom: 10px;
         
     }
 
@@ -456,7 +462,7 @@
         width: 100%;
         object-fit: contain;
         display: none;
-       
+       border-radius: 10px;
     }
 
     .close {
@@ -475,4 +481,25 @@
         cursor: pointer;
     }
 
+    .close:hover {
+       transform: scaleX(1.1);
+    }
 
+
+
+    @media (max-width: 700px) {
+
+        .modal-content-proyectos {
+            flex-direction:column; 
+        }
+
+        .informacion_proyecto_modal{
+            width: 100%;
+            padding-top: 70px;
+        }
+
+        .carrusel_modal {
+            width: 100%;
+        }
+
+    }
