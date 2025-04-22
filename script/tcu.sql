@@ -65,6 +65,53 @@ CREATE TABLE imagen_proyecto  (
 );
 
 
+
+--nuevas tablas para noticias y herramientas
+
+CREATE TABLE noticias(  
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,   
+    descripcion VARCHAR(500) NOT NULL,   
+    fecha DATETIME NOT NULL,   
+    id_usuario INT NOT NULL,   
+    eliminado BOOLEAN NOT NULL DEFAULT FALSE,
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('imagen', 'video')),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
+
+
+CREATE TABLE herramientas(  
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,   
+    descripcion VARCHAR(500) NOT NULL,   
+    fecha DATETIME NOT NULL,   
+    id_usuario INT NOT NULL,   
+    eliminado BOOLEAN NOT NULL DEFAULT FALSE,  
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('imagen', 'video')), 
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) 
+);
+
+
+CREATE TABLE archivo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    url_archivo VARCHAR(255) NOT NULL,
+    eliminado BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+
+CREATE TABLE noticia_archivo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_noticia INT NOT NULL REFERENCES noticias(id),
+    id_archivo INT NOT NULL REFERENCES archivo(id)
+);
+
+CREATE TABLE herramienta_archivo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_herramienta INT NOT NULL REFERENCES herramientas(id),
+    id_archivo INT NOT NULL REFERENCES archivo(id)
+);
+
+
 -- crud usuarios ********************************************************************************************************************
 
 

@@ -13,6 +13,8 @@ if (session_status() == PHP_SESSION_NONE) {
   <div class="navbar-links" id="navbar-links">
 
     <li class="navbar-item"><a href="?controlador=Index&accion=mostrar">Inicio</a></li>
+    <li class="navbar-item"><a href="?controlador=Index&accion=mostrarNoticias">Noticias</a></li>
+    <li class="navbar-item"><a href="?controlador=Index&accion=mostrarHerramientas">Herramientas</a></li>
     <li class="navbar-item"><a href="?controlador=Index&accion=mostrarSobreNosotros">Sobre nosotros</a></li>
     <li class="navbar-item"><a href="?controlador=Index&accion=mostarContacto">Contacto</a></li>
     
@@ -40,6 +42,8 @@ if (session_status() == PHP_SESSION_NONE) {
                 <div class="menu_opciones">
                   <a href="?controlador=Actividades&accion=mostrar"> • Actividades</a>
                   <a href="?controlador=Proyectos&accion=mostrar"> • Proyectos</a>
+                  <a href="?controlador=Noticias&accion=mostrar"> • Noticias</a>
+                  <a href="?controlador=Herramientas&accion=mostrar"> • Herramientas</a>
                   
                   <?php if ($_SESSION['rol'] == 'admin'): ?>
                     <a href="?controlador=Usuarios&accion=mostrar"> • Usuarios</a>

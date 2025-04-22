@@ -2,10 +2,12 @@
   include('public/header.php');
 ?>
 
-<div class="noticias-container">
+<div class="noticiasAdmin-container">
 
-    <br><br>
-    <p>Noticias usuario</p>
+  <h1 class="noticiasAdmin_title">Noticias</h1>
+  <br><br>
+  <p>Noticias Administrador</p>
+
 </div>
 
 

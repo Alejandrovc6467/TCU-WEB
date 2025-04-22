@@ -14,6 +14,16 @@ class IndexController
         $this->view->show("indexView.php");
     }
 
+    public function mostrarNoticias()
+    {
+        $this->view->show("noticias.php");
+    }
+
+    public function mostrarHerramientas()
+    {
+        $this->view->show("herramientas.php");
+    }
+
     public function mostrarSobreNosotros()
     {
         $this->view->show("sobreNosotros.php");
