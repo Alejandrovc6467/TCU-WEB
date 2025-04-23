@@ -44,18 +44,72 @@ class NoticiasController
     /* CRUD *****************************************/
 
     
-    public function obtenerActividades()
+    public function obtenerNoticias()
     {
-        require 'model/ActividadModel.php';
-        $actividadModel = new ActividadModel();
+        require 'model/NoticiaModel.php';
+        $noticiaModel = new NoticiaModel();
 
-        $lista = $actividadModel->obtenerActividades();
+        $lista = $noticiaModel->obtenerNoticias();
 
         header('Content-Type: application/json');
         echo json_encode($lista);
         exit;
     }
 
+
+    public function eliminarNoticia()
+    {
+        require 'model/NoticiaModel.php';
+        $noticiaModel = new NoticiaModel();
+    
+        $respuesta = $noticiaModel->eliminarNoticia($_POST['id']);
+    
+        // Extraer mensaje (asumiendo que es lo único que retorna el SP)
+        $mensaje = isset($respuesta[0]['mensaje']) ? $respuesta[0]['mensaje'] : 'Operación finalizada.';
+    
+        header('Content-Type: application/json');
+        echo json_encode(['mensaje' => $mensaje]);
+        exit;
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function obtenerActividad()
+    {
+        require 'model/ActividadModel.php';
+        $actividadModel = new ActividadModel();
+
+        $lista = $actividadModel->obtenerActividad($_POST['id']);
+
+        header('Content-Type: application/json');
+        echo json_encode($lista);
+        exit;
+    }
     public function agregarActividad()
     {
         // se extrae el archivo enviado

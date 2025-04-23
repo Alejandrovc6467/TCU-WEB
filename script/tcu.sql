@@ -112,6 +112,74 @@ CREATE TABLE herramienta_archivo (
 );
 
 
+--crud noticias ********************************************************************************************************************
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_obtenerNoticias()
+BEGIN
+    -- Seleccionar noticias no eliminadas junto con sus archivos relacionados no eliminados
+    SELECT 
+        n.id AS id_noticia,
+        n.nombre,
+        n.descripcion,
+        n.fecha,
+        n.tipo,
+        a.id AS id_archivo,
+        a.url_archivo
+    FROM 
+        noticias n
+    LEFT JOIN 
+        noticia_archivo na ON n.id = na.id_noticia
+    LEFT JOIN 
+        archivo a ON na.id_archivo = a.id AND a.eliminado = FALSE
+    WHERE 
+        n.eliminado = FALSE
+    ORDER BY 
+        n.id, a.id;
+END $$
+
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_eliminarNoticia(IN p_id_noticia INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error al eliminar la noticia.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Marcar los archivos asociados como eliminados
+    UPDATE archivo 
+    SET eliminado = TRUE
+    WHERE id IN (
+        SELECT id_archivo 
+        FROM noticia_archivo 
+        WHERE id_noticia = p_id_noticia
+    );
+
+    -- Marcar la noticia como eliminada
+    UPDATE noticias 
+    SET eliminado = TRUE 
+    WHERE id = p_id_noticia;
+
+    COMMIT;
+    SELECT 'La noticia y sus archivos fueron eliminados correctamente.' AS mensaje;
+END$$
+
+DELIMITER ;
+
+
+
+
+
 -- crud usuarios ********************************************************************************************************************
 
 

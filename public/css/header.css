@@ -72,7 +72,7 @@
 
 
 /* Estilos para la versión móvil */
-@media (max-width: 768px) {
+@media (max-width: 948px) {
   .navbar-links {
     display: none;
     flex-direction: column;
@@ -142,6 +142,7 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  margin-left: 20px;
 }
 
 .btn_configuracion {
@@ -217,9 +218,10 @@
 
 
 
-@media all and (max-width:1400px) {
+@media all and (max-width:948px) {
 
   .menu_configuraciones {
-    right: -200px;
+    right: -250px;
+    top: -250px;
   }
 }
