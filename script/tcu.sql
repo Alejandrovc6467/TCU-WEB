@@ -180,6 +180,104 @@ DELIMITER ;
 
 
 
+DELIMITER $$
+
+CREATE PROCEDURE sp_ingresarNoticia (
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_tipo VARCHAR(10),
+    IN p_id_usuario INT,
+    IN p_urls TEXT -- URLs separadas por comas
+)
+BEGIN
+    DECLARE v_id_noticia INT;
+    DECLARE v_pos_inicio INT DEFAULT 1;
+    DECLARE v_pos_coma INT;
+    DECLARE v_url_actual VARCHAR(255);
+    DECLARE v_longitud INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error al insertar la noticia.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Insertar la noticia
+    INSERT INTO noticias (nombre, descripcion, tipo, fecha, id_usuario)
+    VALUES (p_nombre, p_descripcion, p_tipo, NOW(), p_id_usuario);
+
+    SET v_id_noticia = LAST_INSERT_ID();
+    SET v_longitud = CHAR_LENGTH(p_urls);
+
+    WHILE v_pos_inicio <= v_longitud DO
+        SET v_pos_coma = LOCATE(',', p_urls, v_pos_inicio);
+
+        IF v_pos_coma = 0 THEN
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio));
+            SET v_pos_inicio = v_longitud + 1;
+        ELSE
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio, v_pos_coma - v_pos_inicio));
+            SET v_pos_inicio = v_pos_coma + 1;
+        END IF;
+
+        -- Insertar archivo
+        INSERT INTO archivo (url_archivo) VALUES (v_url_actual);
+        SET @id_archivo = LAST_INSERT_ID();
+
+        -- Insertar relación noticia_archivo
+        INSERT INTO noticia_archivo (id_noticia, id_archivo) VALUES (v_id_noticia, @id_archivo);
+    END WHILE;
+
+    COMMIT;
+    SELECT 'Se agregó la noticia correctamente.' AS mensaje;
+END$$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_actualizarNoticiaSinNuevosArchivos (
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion TEXT,
+    IN p_id_usuario INT
+)
+BEGIN
+    DECLARE mensaje TEXT;
+
+    DECLARE existe INT;
+    SELECT COUNT(*) INTO existe FROM noticia WHERE id = p_id;
+
+    IF existe = 0 THEN
+        SET mensaje = 'Error: La noticia no existe.';
+    ELSE
+        UPDATE noticia
+        SET
+            nombre = p_nombre,
+            descripcion = p_descripcion,
+            id_usuario = p_id_usuario,
+            fecha_actualizacion = NOW()
+        WHERE id = p_id;
+
+        SET mensaje = 'Actualización exitosa.';
+    END IF;
+
+    SELECT mensaje;
+END$$
+
+DELIMITER ;
+
+
+
+
+
+
+
+
 -- crud usuarios ********************************************************************************************************************
 
 

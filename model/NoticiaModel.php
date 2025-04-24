@@ -11,14 +11,6 @@ class NoticiaModel
         $this->db = SPDO::getInstance();
     }
 
-    public function obtenerNoticiasOriginal()
-    {
-        $consulta = $this->db->query('CALL obtenerNoticias()');
-        $resultado = $consulta->fetchAll();
-        return $resultado;
-    }
-
-
     public function obtenerNoticias()
     {
         $consulta = $this->db->query('CALL sp_obtenerNoticias()');
@@ -55,9 +47,6 @@ class NoticiaModel
         return array_values($noticias);
     }
 
-
-
-
     public function eliminarNoticia($id)
     {
         $consulta = $this->db->prepare('CALL sp_eliminarNoticia(?)');
@@ -68,56 +57,71 @@ class NoticiaModel
         return $resultado;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    //revisar todo esto para ver que me sirve
-    /*
-    public function insertarActividad($url_archivo, $nombre, $descripcion, $id_usuario)
+    public function insertarNoticia($nombre, $descripcion, $tipo, $id_usuario, $archivos_guardados)
     {
-        $consulta = $this->db->prepare('CALL sp_insertarActividad( ?, ?, ?, ? )');
-        $consulta->bindParam(1, $url_archivo);
+        // Convertir array de rutas a string separado por comas
+        $urls_concatenadas = implode(',', $archivos_guardados);
+
+        $consulta = $this->db->prepare('CALL sp_ingresarNoticia(?, ?, ?, ?, ?)');
+        $consulta->bindParam(1, $nombre);
+        $consulta->bindParam(2, $descripcion);
+        $consulta->bindParam(3, $tipo);
+        $consulta->bindParam(4, $id_usuario);
+        $consulta->bindParam(5, $urls_concatenadas);
+        $consulta->execute();
+
+        $resultado = $consulta->fetchAll();
+        $consulta->closeCursor();
+        return $resultado[0]['mensaje'];
+    }
+
+
+    public function actualizarNoticiaSinNuevosArchivos($id, $nombre, $descripcion, $id_usuario)
+    {
+        $consulta = $this->db->prepare('CALL sp_actualizarNoticiaSinNuevosArchivos(?, ?, ?, ?)');
+        $consulta->bindParam(1, $id);
         $consulta->bindParam(2, $nombre);
         $consulta->bindParam(3, $descripcion);
         $consulta->bindParam(4, $id_usuario);
         $consulta->execute();
+
         $resultado = $consulta->fetchAll();
         $consulta->closeCursor();
-        return $resultado;
+        return $resultado[0]['mensaje'];
     }
 
-    public function actualizarActividad($id, $url_archivo, $nombre, $descripcion, $id_usuario)
+
+
+
+
+
+
+
+
+
+
+
+
+    public function actualizarNoticia($nombre, $descripcion, $tipo, $id_usuario, $archivos_guardados)
     {
-        $consulta = $this->db->prepare('CALL sp_actualizarActividad( ?, ?, ?, ?, ? )');
-        $consulta->bindParam(1, $id);
-        $consulta->bindParam(2, $url_archivo, $url_archivo !== null ? PDO::PARAM_STR : PDO::PARAM_NULL);
-        $consulta->bindParam(3, $nombre);
-        $consulta->bindParam(4, var: $descripcion);
-        $consulta->bindParam(5, $id_usuario);
+        // Convertir array de rutas a string separado por comas
+        $urls_concatenadas = implode(',', $archivos_guardados);
+
+        $consulta = $this->db->prepare('CALL sp_ingresarNoticia(?, ?, ?, ?, ?)');
+        $consulta->bindParam(1, $nombre);
+        $consulta->bindParam(2, $descripcion);
+        $consulta->bindParam(3, $tipo);
+        $consulta->bindParam(4, $id_usuario);
+        $consulta->bindParam(5, $urls_concatenadas);
         $consulta->execute();
+
         $resultado = $consulta->fetchAll();
         $consulta->closeCursor();
-        return $resultado;
+        return $resultado[0]['mensaje']; // devolver mensaje limpio
     }
 
-    public function eliminarActividad($id)
-    {
-        $consulta = $this->db->prepare('CALL sp_eliminarActividad( ? )');
-        $consulta->bindParam(1, $id);
-        $consulta->execute();
-        $resultado = $consulta->fetchAll();
-        $consulta->closeCursor();
-        return $resultado;
-    }
-    */    
+
+
+
 
 }

@@ -12,7 +12,11 @@ document.getElementById('agregarNoticia')
 
         // llamar a la funcion dependiendo del estado
         if (isEditMode) {
-            actualizarNoticia();
+            if(updateArchivos){
+                actualizarNoticiaConNuevosArchivos();
+            }else{
+                actualizarNoticiaSinNuevosArchivos();  
+            }
         } else {
             agregarNoticia();
         }
@@ -95,7 +99,8 @@ function obtenerNoticias() {
                             .attr("alt", "Vista previa de la imagen")
                             .css({
                                 "max-width": "90px",
-                                "height": "auto"
+                                "height": "auto",
+                                "max-height": "120px",
                             })
                             .addClass("img-thumbnail");
                         multimediaCell.append(img);
@@ -104,31 +109,17 @@ function obtenerNoticias() {
                     // Para videos, mostrar miniaturas que no se puedan reproducir
                     noticia.archivos.forEach(archivo => {
                         var videoThumb = $("<div>")
-                            .addClass("video-thumbnail")
                             .css({
-                                "width": "90px",
+                                "width": "50px",
                                 "height": "60px",
-                                "background-image": "url('public/img/video-placeholder.png')",
+                                "background-image": "url('./public/assets/logo_archivo_video.png')",
                                 "background-size": "cover",
                                 "display": "inline-block",
                                 "margin": "5px",
                                 "position": "relative"
                             });
                         
-                        // Añadir icono de video encima de la miniatura
-                        var videoIcon = $("<span>")
-                            .addClass("material-icons")
-                            .text("play_circle")
-                            .css({
-                                "position": "absolute",
-                                "top": "50%",
-                                "left": "50%",
-                                "transform": "translate(-50%, -50%)",
-                                "color": "white",
-                                "font-size": "24px"
-                            });
-                        
-                        videoThumb.append(videoIcon);
+                       
                         multimediaCell.append(videoThumb);
                     });
                 }
@@ -192,10 +183,6 @@ function eliminarNoticia(id) {
     });
 }
 
-
-
-
-//****** REVISION **************************************************/
 // Función para agregar noticias nuevas
 function agregarNoticia() {
 
@@ -214,7 +201,7 @@ function agregarNoticia() {
     
     
     // Desactivar el botón mientras se procesa la solicitud AJAX
-    document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = true;
+    document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
 
     // Crear un objeto FormData para enviar archivos y datos
     var form_data = new FormData();
@@ -238,36 +225,34 @@ function agregarNoticia() {
         success: function (response) {
 
             // Habilitar el botón después de recibir la respuesta del servidor
-            document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = false;
+            document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = false;
 
+          
 
             // EN REVISION ****************************************************
-
-            if (response[0]["mensaje"] === "Noticia guardada con éxito.") {
+            
+            if (response[0]["mensaje"] === "Se agregó la noticia correctamente.") {
 
                 limpiarCamposFormulario();
                 Swal.fire({icon: 'success', title: '¡Genial!', text: response[0]["mensaje"], confirmButtonColor: '#088cff' });
 
-            } else if (response[0]["mensaje"].includes("Ocurrió un error")) {
+            } else { 
 
                 Swal.fire({ icon: 'error', title: 'Oops...', text: response[0]["mensaje"], confirmButtonColor: '#088cff' });
 
-            } else {
-
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Ocurrió un error, intenta nuevamente', confirmButtonColor: '#088cff' });
-            }
+            } 
 
             // FIN DE EN REVISION *********************************************
 
             obtenerNoticias(); // Recargar la tabla
-            
+
         },
         error: function (xhr, status, error) {
 
             console.log(error, xhr, status);
 
             // En caso de error, también habilitar el botón nuevamente
-            document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = false;
+            document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = false;
 
             Swal.fire({
                 icon: 'error',
@@ -281,57 +266,118 @@ function agregarNoticia() {
     
 }
 
+// Funcion para actualizar la noticia sin subir nuevos archivos
+function actualizarNoticiaSinNuevosArchivos(){
 
+    console.log('Voy a actualizar sin subir archivos');
 
-
-//****** EN REVISION **************************************************/
-// Función para actualizar una noticia
-function actualizarNoticia() {
-
-
-    if(updateArchivos){
-        console.log('Voy a actualizar y subir archivos nuevos');
-    }else{
-        console.log('Voy a actualizar sin subir archivos');
-    }
-
-    /*
     // Se obtienen los valores introducidos en el formulario
     const nombre = document.getElementById("nombre").value.trim();
     const descripcion = document.getElementById("descripcion").value.trim();
-    const archivos = document.getElementById("archivosNoticia").files;
-
-    // Desactivar el botón mientras se procesa la solicitud AJAX
-    document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = true;
-
-    // Determinar el tipo de archivo si hay nuevos archivos
-    let tipo = null; // No enviar tipo si no hay nuevos archivos
+   
+    console.log("ID de la noticia a editar:", editNoticiaId);
+    console.log("nombre:", nombre);
+    console.log("descripcion:", descripcion);
     
-    if (archivos.length > 0) {
-        const primerArchivo = archivos[0];
-        if (primerArchivo.type.startsWith('video/')) {
-            tipo = "video";
-        } else if (primerArchivo.type.startsWith('image/')) {
-            tipo = "imagen";
-        }
-    }
+    // Desactivar el botón mientras se procesa la solicitud AJAX
+    document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
 
     // Crear un objeto FormData para enviar archivos y datos
     var form_data = new FormData();
     form_data.append("id", editNoticiaId);
     form_data.append("nombre", nombre);
     form_data.append("descripcion", descripcion);
+
     
-    if (tipo !== null) {
-        form_data.append("tipo", tipo);
-    }
+    $.ajax({
+        url: "?controlador=Noticias&accion=actualizarNoticiaSinNuevosArchivos",
+        type: "POST",
+        data: form_data,
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            // Habilitar el botón
+            document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = false;
+
+            if (response[0]["mensaje"] === 'Actualización exitosa.') {
+                limpiarCamposFormulario();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Genial!',
+                    text: response[0]["mensaje"],
+                    confirmButtonColor: '#088cff'
+                });
+
+                // Salir del modo de edición
+                cancelEdit();
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response[0]["mensaje"],
+                    confirmButtonColor: '#088cff'
+                });
+            }
+
+            obtenerNoticias();
+        },
+        error: function (xhr, status, error) {
+            console.log(error, xhr, status);
+
+            // Habilitar el botón en caso de error
+            document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = false;
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al procesar la solicitud',
+                confirmButtonColor: '#088cff'
+            });
+        }
+    });
+    
+
+
+}
+
+// Funcion para actualizar la noticia y subir nuevos archivos
+function actualizarNoticiaConNuevosArchivos(){
+    console.log('Voy a actualizar y subir archivos nuevos');
+    //borrar todos los archivos actuales antes de agregagr los nuevos a la base de datos
+    // eso lo hago con el id de la noticia a editar
+
+
+
+    
+    // Se obtienen los valores introducidos en el formulario
+    const nombre = document.getElementById("nombre").value.trim();
+    const descripcion = document.getElementById("descripcion").value.trim();
+    const archivos = document.getElementById("archivosNoticia").files;
+
+    console.log("nombre:", nombre);
+    console.log("descripcion:", descripcion);
+    console.log("Archivos:", archivos);
+    console.log("ID de la noticia a editar:", editNoticiaId);
+
+    // Desactivar el botón mientras se procesa la solicitud AJAX
+    document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
+
+
+    // Crear un objeto FormData para enviar archivos y datos
+    var form_data = new FormData();
+    form_data.append("id", editNoticiaId);
+    form_data.append("nombre", nombre);
+    form_data.append("descripcion", descripcion);
 
     // Agregar cada archivo individualmente si hay nuevos
     for (let i = 0; i < archivos.length; i++) {
         form_data.append("archivos[]", archivos[i]);
     }
 
-    */
+    
 
     /*
     $.ajax({
@@ -343,7 +389,7 @@ function actualizarNoticia() {
         contentType: false,
         success: function (response) {
             // Habilitar el botón
-            document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = false;
+            document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = false;
 
             if (response[0]["mensaje"] === 'Actualización exitosa.') {
                 limpiarCamposFormulario();
@@ -386,7 +432,7 @@ function actualizarNoticia() {
             console.log(error, xhr, status);
 
             // Habilitar el botón en caso de error
-            document.getElementById('agregarProyecto').querySelector('button[type="submit"]').disabled = false;
+            document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = false;
 
             Swal.fire({
                 icon: 'error',
@@ -398,16 +444,19 @@ function actualizarNoticia() {
     });
 
     */
+
+
+
+
+
+
+
 }
 
 
 
 
-
-
-
-
-
+/***  Funciones complementarias  *********************************************************/
 
 
 // Método para manejar el cambio de selección de tipo de archivo
@@ -437,13 +486,6 @@ function handleTipoArchivoChange(event) {
 
 // Ejecutar una vez al cargar para aplicar el tipo por defecto
 handleTipoArchivoChange({ target: document.querySelector('input[name="tipoArchivo"]:checked') });
-
-
-
-
-
-
-
 
 
 
@@ -480,6 +522,19 @@ function editarNoticia(id, nombre, descripcion, url_archivos, tipo) {
     document.getElementById('nombre').value = nombre;
     document.getElementById('descripcion').value = descripcion;
     document.getElementById('archivosNoticia').required = false;
+
+    // Seleccionar el radio según el tipo recibido y cambiar el tipo de archivo aceptados en el input archivosNoticia
+    if (tipo === 'imagen') {
+        document.getElementById('radioImagenes').checked = true;
+        document.getElementById('archivosNoticia').accept = 'image/*';
+    } else{
+        document.getElementById('radioVideo').checked = true;
+        document.getElementById('archivosNoticia').accept = 'video/*';
+    }
+
+    // Desactivar los radios de tipo de archivo
+    document.getElementById('radioImagenes').disabled = true;
+    document.getElementById('radioVideo').disabled = true;
     
     
     // Mostrar vista previa según el tipo de archivo
@@ -506,6 +561,10 @@ function cancelEdit() {
     if (cancelButton) {
         cancelButton.remove();
     }
+
+    // Activar los radios de tipo de archivo
+    document.getElementById('radioImagenes').disabled = false;
+    document.getElementById('radioVideo').disabled = false;
 
     document.getElementById('archivosNoticia').required = true;
 }

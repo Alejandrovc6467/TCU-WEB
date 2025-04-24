@@ -43,13 +43,14 @@
       </div>
 
       <div class="mb-3">
-            <label for="basic-url" class="form-label">Ingrese imagenes/video para la noticia:</label>
+            <label for="basic-url" class="form-label">Ingrese los archivos de la noticia:  <p class="formatos-permitodos-text">Formatos permitidos: png, jpg, jpeg, svg, webp, mp4, avi, mkv</p></label>
             <div class="input-group">
                 <label class="input-group-text" for="archivosNoticia">
                     <i class="bi bi-file-earmark-arrow-up-fill" style="color: #a3a3a3;"></i>
                 </label>
                 <input class="form-control" type="file" id="archivosNoticia" name="archivosNoticia" multiple required>
             </div>
+           
             <!-- Contenedor para la vista previa -->
             <div id="vistaPrevia" class="mt-3">
                 <!-- Aquí se cargará la vista previa de la imagen -->
@@ -86,7 +87,7 @@
 
 
 
-<script src="public/js/noticias.js?2"></script>
+<script src="public/js/noticias.js?5"></script>
 
 <?php
 include('public/footer.php');

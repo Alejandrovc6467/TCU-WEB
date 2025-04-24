@@ -37,13 +37,8 @@ class NoticiasController
     }
 
 
+    /* CRUD ****************************************************************************************/
 
-
-
-    /* Todo esto de aqui hacia abajo no me sirve, solo el metodo subir, verlo y json que se envia***************** */
-    /* CRUD *****************************************/
-
-    
     public function obtenerNoticias()
     {
         require 'model/NoticiaModel.php';
@@ -55,7 +50,6 @@ class NoticiasController
         echo json_encode($lista);
         exit;
     }
-
 
     public function eliminarNoticia()
     {
@@ -72,97 +66,56 @@ class NoticiasController
         exit;
     }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function obtenerActividad()
+    public function agregarNoticia()
     {
-        require 'model/ActividadModel.php';
-        $actividadModel = new ActividadModel();
 
-        $lista = $actividadModel->obtenerActividad($_POST['id']);
+        //primera prueba para ver si funciona el controlador
+        //echo json_encode([["mensaje" => "Funciona el controlador"]]);
+        //exit;
 
-        header('Content-Type: application/json');
-        echo json_encode($lista);
-        exit;
-    }
-    public function agregarActividad()
-    {
-        // se extrae el archivo enviado
-        $archivo = $_FILES['archivo'];
-
-        // extenciones permitidas
-        $extension_permitida = ['png', 'jpg', 'jpeg', 'svg', 'webp'];
-
-        //respuesta en caso de un fromato de extencion invalido
-        $respuesta = [
-            [
-                "mensaje" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . ".",
-                "0" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . "."
-            ]
-        ];
-
-        if ($this->verificarExtencionesPermitidas($archivo, $extension_permitida)) {
-
-            // se extrae la ruta temporal del archivo
-            $rutaTemporal = $archivo['tmp_name'];
-
-            // se define la nueva ruta del archivo 
-            $rutaDestino = $this->definirNombreDeArchivoUnico($archivo);
-
-            //verificar que se pueda subir el documento correctamente
-            if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
-
-                //verificar si la sescion esta iniciada para tomar el id de usuario
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-                $id_usuario = $_SESSION['id'];
-                if (!isset($_SESSION['id'])) {
-                    die("Error: ID de usuario no está configurado en la sesión.");
-                }
-
-                $respuesta = $this->insertarActividad(
-                    $rutaDestino,
-                    $_POST['nombre'],
-                    $_POST['descripcion'],
-                    $id_usuario
-                );
-
-            } else {
-                $respuesta = [
-                    [
-                        'message' => 'Ocurrió un error, al enviar el documento, intente de nuevo.',
-                        '0' => 'Ocurrió un error, al enviar el documento, intente de nuevo.'
-                    ]
-                ];
-            }
-
+        // Verificar si se recibieron archivos
+        if (empty($_FILES['archivos']['name'][0])) {
+            echo json_encode([["mensaje" => "No se recibieron archivos."]]);
+            exit;
         }
+
+        // Extensiones permitidas
+        $extensiones_permitidas = ['png', 'jpg', 'jpeg', 'svg', 'webp', 'mp4', 'avi', 'mkv'];
+
+        // Verificar extensiones antes de procesar archivos
+        if (!$this->verificarExtensionesPermitidas($_FILES['archivos'], $extensiones_permitidas)) {
+            echo json_encode([["mensaje" => "Al menos un archivo tiene un formato no permitido."]]);
+            exit;
+        }
+
+        $archivos_guardados = [];
+        foreach ($_FILES['archivos']['tmp_name'] as $key => $tmp_name) {
+            // Obtener nombre único para el archivo
+            $rutaDestino = $this->definirNombreDeArchivoUnico($_FILES['archivos']['name'][$key]);
+
+            // Intentar mover el archivo a la ruta de destino
+            if ($this->subirImagen($tmp_name, $rutaDestino)) {
+                $archivos_guardados[] = $rutaDestino;
+            } else {
+                echo json_encode([["mensaje" => "Error al subir la imagen: " . $_FILES['archivos']['name'][$key]]]);
+                exit;
+            }
+        }
+
+        // Verificar sesión activa
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            echo json_encode([["mensaje" => "Error: Usuario no autenticado."]]);
+            exit;
+        }
+
+        $id_usuario = $_SESSION['id'];
+
+        // Insertar la noticia en la base de datos con los archivos subidos
+        $respuesta = $this->insertarNoticia($_POST['nombre'], $_POST['descripcion'], $_POST['tipo'],  $id_usuario, $archivos_guardados);
+
+        $respuesta = [[ 'mensaje' => $respuesta ]];// quitar esto variable de prueba
+
 
         //se devuelve el contenido de la respuesta como un json
         header('Content-Type: application/json');
@@ -170,146 +123,106 @@ class NoticiasController
         exit;
     }
 
-    public function insertarActividad($url_archivo, $nombre, $descripcion, $id_usuario)
+    public function insertarNoticia($nombre, $descripcion, $tipo, $id_usuario, $archivos_guardados)
     {
-        require 'model/ActividadModel.php';
-        $actividadModel = new ActividadModel();
+        require 'model/NoticiaModel.php';
+        $noticiaModel = new NoticiaModel();
 
         //se ejecuta el metodo para guardar el usuario en base de datos
-        $respuesta = $actividadModel->insertarActividad(
-            $url_archivo,
+        $respuesta = $noticiaModel->insertarNoticia(
             $nombre,
             $descripcion,
-            $id_usuario
+            $tipo,
+            $id_usuario,
+            $archivos_guardados
         );
 
         return $respuesta;
     }
 
-    public function modificarActividad()
+
+    public function actualizarNoticiaSinNuevosArchivos()
     {
-        // verifica que exita un archivo para actualizar adjunto en el formulario
-        if (isset($_FILES['archivo'])) {
+       
+        require 'model/NoticiaModel.php';
+        $noticiaModel = new NoticiaModel();
 
-            // se extrae el archivo enviado
-            $archivo = $_FILES['archivo'];
-
-            // extenciones permitidas
-            $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
-
-            //respuesta en caso de un fromato de extencion invalido
-            $respuesta = [
-                [
-                    "mensaje" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . ".",
-                    "0" => 'Ocurrió un error, la extencion de la imagen no es valida, los formatos validos son: ' . implode(', ', $extension_permitida) . "."
-                ]
-            ];
-
-            if ($this->verificarExtencionesPermitidas($archivo, $extension_permitida)) {
-
-                // se extrae la ruta temporal del archivo
-                $rutaTemporal = $archivo['tmp_name'];
-
-                // se define la nueva ruta del archivo 
-                $rutaDestino = $this->definirNombreDeArchivoUnico($archivo);
-
-                //verificar que se pueda subir el documento correctamente
-                if ($this->subirImagen($rutaTemporal, $rutaDestino)) {
-
-                    //verificar si la sescion esta iniciada para tomar el id de usuario
-                    if (session_status() === PHP_SESSION_NONE) {
-                        session_start();
-                    }
-                    $id_usuario = $_SESSION['id'];
-                    if (!isset($_SESSION['id'])) {
-                        die("Error: ID de usuario no está configurado en la sesión.");
-                    }
-
-                    $respuesta = $this->actualizarActividad(
-                        $_POST['id'],
-                        $rutaDestino,
-                        $_POST['nombre'],
-                        $_POST['descripcion'],
-                        $id_usuario
-                    );
-
-                } else {
-                    $respuesta = [
-                        [
-                            'message' => 'Ocurrió un error, al enviar el documento, intente de nuevo.',
-                            '0' => 'Ocurrió un error, al enviar el documento, intente de nuevo.'
-                        ]
-                    ];
-                }
-
-            }
-
-            //se devuelve el contenido de la respuesta como un json
-            header('Content-Type: application/json');
-            echo json_encode($respuesta);
+        // Verificar sesión activa
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            echo json_encode([["mensaje" => "Error: Usuario no autenticado."]]);
             exit;
-
-        } else {
-            //verificar si la sescion esta iniciada para tomar el id de usuario
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-            $id_usuario = $_SESSION['id'];
-            if (!isset($_SESSION['id'])) {
-                die("Error: ID de usuario no está configurado en la sesión.");
-            }
-
-            $respuesta = $this->actualizarActividad(
-                $_POST['id'],
-                null,
-                $_POST['nombre'],
-                $_POST['descripcion'],
-                $id_usuario
-            );
-
-            //se devuelve el contenido de la respuesta como un json
-            header('Content-Type: application/json');
-            echo json_encode($respuesta);
-            exit;
-
         }
 
-    }
+        $id_usuario = $_SESSION['id'];
 
-    public function actualizarActividad($id, $url_archivo, $nombre, $descripcion, $id_usuario)
-    {
-        require 'model/ActividadModel.php';
-        $actividadModel = new ActividadModel();
-
-        //se ejecuta el metodo para guardar el usuario en base de datos
-        $respuesta = $actividadModel->actualizarActividad(
-            $id,
-            $url_archivo,
-            $nombre,
-            $descripcion,
-            $id_usuario
+        $respuesta = $noticiaModel->actualizarNoticiaSinNuevosArchivos(
+            $_POST['id'],
+            $_POST['nombre'],
+            $_POST['descripcion'],
+            $id_usuario 
         );
-
-        return $respuesta;
-    }
-
-    public function eliminarActividad()
-    {
-        require 'model/ActividadModel.php';
-        $actividadModel = new ActividadModel();
-
-        // se ejecuta el metodo para guardar el usuario en base de datos
-        $respuesta = $actividadModel->eliminarActividad(
-            $_POST['id']
-        );
-
-        // se retorna el resultado de la operacion
+        
         header('Content-Type: application/json');
-        echo json_encode($respuesta);
+        echo json_encode([
+            ["mensaje" => $respuesta]
+        ]);
         exit;
     }
 
-    /* METODOS COMPLEMENTARIOS *****************************************/
+
+    public function actualizarProyecto($id, $nombre, $descripcion, $id_usuario, $imagenes_guardadas)
+    {
+        require 'model/ProyectoModel.php';
+        $proyectoModel = new ProyectoModel();
+
+        //se ejecuta el metodo para guardar el usuario en base de datos
+        $respuesta = $proyectoModel->actualizarProyecto(
+            $id,
+            $nombre,
+            $descripcion,
+            $id_usuario,
+            $imagenes_guardadas
+        );
+
+        return $respuesta;
+    }
+
+
+
+
+    /* Funciones complementarias ******************************************************************/
+
+    private function verificarExtensionesPermitidas($archivos, $extensiones_permitidas)
+    {
+        foreach ($archivos['name'] as $key => $nombreArchivo) {
+            $extension = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));
+            if (!in_array($extension, $extensiones_permitidas)) {
+                return false; // Retorna falso si alguna extensión no está permitida
+            }
+        }
+        return true; // Si todas las imágenes son válidas, retorna true
+    }
+
+    private function definirNombreDeArchivoUnico($nombreArchivo)
+    {
+        $directorioDestino = 'uploads/';
+
+        // Extraer información del archivo
+        $nombreBase = pathinfo($nombreArchivo, PATHINFO_FILENAME);
+        $extension = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));
+
+        // Generar un nombre único
+        $nuevoNombre = $nombreBase;
+        $contador = 1;
+
+        while (file_exists($directorioDestino . $nuevoNombre . '.' . $extension)) {
+            $nuevoNombre = $nombreBase . '_' . $contador;
+            $contador++;
+        }
+
+        return $directorioDestino . $nuevoNombre . '.' . $extension;
+    }
 
     private function subirImagen($rutaTemporal, $rutaDestino)
     {
@@ -317,140 +230,6 @@ class NoticiasController
         return move_uploaded_file($rutaTemporal, $rutaDestino);
     }
 
-    private function definirNombreDeArchivoUnico($archivo)
-    {
-        // extraccion de datos necesarios para la operacion
-        $nombreArchivo = $archivo['name'];
-        $directorioDestino = 'uploads/';
 
-        /* 
-            varibles necesarias para asegurar que el archivo tenga un nombre unico
-            en caso de estar repetido al nombre se le agregar un numero que incrementara 
-            por la cantidad de copias del mismo archivo
-        */
-        $nombreBase = pathinfo($nombreArchivo, PATHINFO_FILENAME);
-        $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
-        $nuevoNombre = $nombreBase;
-        $contador = 1;
-
-        // este while busca entre los archivos presentes en la direccion definida
-        while (file_exists($directorioDestino . $nuevoNombre . '.' . $extension)) {
-            $nuevoNombre = $nombreBase . '_' . $contador; //nuevo nombre aumenta su numero en caso de ya existir un archivo repetido
-            $contador++;
-        }
-
-        // estblece el nombre nuevo del archivo
-        $nombreArchivo = $nuevoNombre . '.' . $extension;
-
-        return $directorioDestino . $nombreArchivo;
-    }
-
-    private function verificarExtencionesPermitidas($archivo, $extension_permitida)
-    {
-        // extraccion de la extencion del archivo
-        $archivo_info = pathinfo($archivo['name']);
-        $archivo_extension = strtolower($archivo_info['extension']);
-
-        return in_array($archivo_extension, $extension_permitida);
-    }
-
-    private function subirdocumento()
-    {
-        // Verifica si se ha enviado una solicitud POST.
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $extension_permitida = ['png', 'jpg', 'jpeg', 'svg'];
-
-            //se extrae el archivo enviado
-            $archivo = $_FILES['archivo'];
-
-            //extraccion de la informacion general del archivo
-            $archivo_info = pathinfo($archivo['name']);
-            $archivo_extension = strtolower($archivo_info['extension']);
-
-            if (in_array($archivo_extension, $extension_permitida)) {
-
-                //realizar operaciones de guardado, validación u otras acciones aquí.
-
-                $nombreArchivo = $_FILES['archivo']['name'];
-                $rutaTemporal = $_FILES['archivo']['tmp_name'];
-                $directorioDestino = 'uploads/';
-
-
-                $nombreBase = pathinfo($nombreArchivo, PATHINFO_FILENAME);
-                $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
-                $nuevoNombre = $nombreBase;
-                $contador = 1;
-
-                while (file_exists($directorioDestino . $nuevoNombre . '.' . $extension)) {
-                    $nuevoNombre = $nombreBase . '_' . $contador;
-                    $contador++;
-                }
-
-                $nombreArchivo = $nuevoNombre . '.' . $extension;
-
-
-
-                $rutaDestino = $directorioDestino . $nombreArchivo;
-
-                if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
-
-
-                    //una vez subido al servidor hago la insercion a la bd
-
-                    //////////////////// guaradado en la base de datos
-                    require 'model/userModel.php';
-                    $userModel = new userModel();
-
-                    $resultado = $userModel->guardarDocumentoBD(
-                        $rutaDestino,
-                        $_POST['email_user'],
-                        $_POST['temadocumento']
-                    );
-                    //////////////////////// FIN guaradado en la base de datos
-
-                    $mensaje = "1";
-
-                } else {
-                    $mensaje = "0";
-                }
-
-
-
-                // Despues de hacer todo el proceso de guardado prepararo una respuesta en formato JSON para enviarla al "subirdocumento.js" y el muestre la ventana de sweet Alert con el mensaje
-
-
-
-
-                //echo 'El archivo se ha cargado exitosamente.';
-            } else {
-                $mensaje = "2";
-                //echo 'El archivo no es de un tipo permitido (PDF, DOC o DOCX).';
-            }
-            //fin nuevo
-
-            $response = array(
-                'status' => 'success',
-                'message' => $mensaje
-            );
-
-
-            // Envía la respuesta en formato JSON.
-            header('Content-Type: application/json');
-            echo json_encode($response);
-
-
-
-        } else {
-            // Manejo de solicitud no válida.
-            $response = array(
-                'status' => 'error',
-                'message' => 'Ocurrio un error al enviar el documento, intente de nuevo'
-            );
-
-            header('Content-Type: application/json');
-            echo json_encode($response);
-        }
-    }
 
 }
