@@ -87,7 +87,7 @@
 
 
 
-<script src="public/js/noticias.js?5"></script>
+<script src="public/js/noticias.js?7"></script>
 
 <?php
 include('public/footer.php');

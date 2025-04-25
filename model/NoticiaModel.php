@@ -75,7 +75,6 @@ class NoticiaModel
         return $resultado[0]['mensaje'];
     }
 
-
     public function actualizarNoticiaSinNuevosArchivos($id, $nombre, $descripcion, $id_usuario)
     {
         $consulta = $this->db->prepare('CALL sp_actualizarNoticiaSinNuevosArchivos(?, ?, ?, ?)');
@@ -87,41 +86,24 @@ class NoticiaModel
 
         $resultado = $consulta->fetchAll();
         $consulta->closeCursor();
-        return $resultado[0]['mensaje'];
+        return $resultado;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    public function actualizarNoticia($nombre, $descripcion, $tipo, $id_usuario, $archivos_guardados)
+    public function actualizarNoticiaConNuevosArchivos($id, $nombre, $descripcion, $id_usuario, $urls_concatenadas)
     {
-        // Convertir array de rutas a string separado por comas
-        $urls_concatenadas = implode(',', $archivos_guardados);
-
-        $consulta = $this->db->prepare('CALL sp_ingresarNoticia(?, ?, ?, ?, ?)');
-        $consulta->bindParam(1, $nombre);
-        $consulta->bindParam(2, $descripcion);
-        $consulta->bindParam(3, $tipo);
+        $consulta = $this->db->prepare('CALL sp_actualizarNoticiaConNuevosArchivos(?, ?, ?, ?, ?)');
+        $consulta->bindParam(1, $id);
+        $consulta->bindParam(2, $nombre);
+        $consulta->bindParam(3, $descripcion);
         $consulta->bindParam(4, $id_usuario);
         $consulta->bindParam(5, $urls_concatenadas);
         $consulta->execute();
 
         $resultado = $consulta->fetchAll();
         $consulta->closeCursor();
-        return $resultado[0]['mensaje']; // devolver mensaje limpio
+        return $resultado;
+
     }
-
-
-
 
 
 }

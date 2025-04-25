@@ -38,6 +38,9 @@ document.getElementById("archivosNoticia")
         mostrarVistaPreviaDesdeInput(archivos); // Llamar a la función con el archivo
     });
 
+
+/*** CRUD de noticias ***********************************************************************************/  
+
 // Función para solicitar las noticias y mostrarlas en la vista
 function obtenerNoticias() {
     $.ajax({
@@ -345,12 +348,8 @@ function actualizarNoticiaSinNuevosArchivos(){
 
 // Funcion para actualizar la noticia y subir nuevos archivos
 function actualizarNoticiaConNuevosArchivos(){
+
     console.log('Voy a actualizar y subir archivos nuevos');
-    //borrar todos los archivos actuales antes de agregagr los nuevos a la base de datos
-    // eso lo hago con el id de la noticia a editar
-
-
-
     
     // Se obtienen los valores introducidos en el formulario
     const nombre = document.getElementById("nombre").value.trim();
@@ -365,7 +364,6 @@ function actualizarNoticiaConNuevosArchivos(){
     // Desactivar el botón mientras se procesa la solicitud AJAX
     document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
 
-
     // Crear un objeto FormData para enviar archivos y datos
     var form_data = new FormData();
     form_data.append("id", editNoticiaId);
@@ -378,10 +376,8 @@ function actualizarNoticiaConNuevosArchivos(){
     }
 
     
-
-    /*
     $.ajax({
-        url: "?controlador=Noticias&accion=modificarNoticia",
+        url: "?controlador=Noticias&accion=actualizarNoticiaConNuevosArchivos",
         type: "POST",
         data: form_data,
         dataType: "json",
@@ -403,20 +399,6 @@ function actualizarNoticiaConNuevosArchivos(){
 
                 // Salir del modo de edición
                 cancelEdit();
-            } else if (response[0]["mensaje"] === 'No se realizaron cambios.') {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Información',
-                    text: response[0]["mensaje"],
-                    confirmButtonColor: '#088cff'
-                });
-            } else if (response[0]["mensaje"].includes("Ocurrió un error")) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: response[0]["mensaje"],
-                    confirmButtonColor: '#088cff'
-                });
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -443,12 +425,7 @@ function actualizarNoticiaConNuevosArchivos(){
         }
     });
 
-    */
-
-
-
-
-
+    
 
 
 }

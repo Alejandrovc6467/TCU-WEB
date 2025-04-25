@@ -68,11 +68,6 @@ class NoticiasController
     
     public function agregarNoticia()
     {
-
-        //primera prueba para ver si funciona el controlador
-        //echo json_encode([["mensaje" => "Funciona el controlador"]]);
-        //exit;
-
         // Verificar si se recibieron archivos
         if (empty($_FILES['archivos']['name'][0])) {
             echo json_encode([["mensaje" => "No se recibieron archivos."]]);
@@ -140,7 +135,6 @@ class NoticiasController
         return $respuesta;
     }
 
-
     public function actualizarNoticiaSinNuevosArchivos()
     {
        
@@ -148,7 +142,10 @@ class NoticiasController
         $noticiaModel = new NoticiaModel();
 
         // Verificar sesión activa
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        // Verificar si el usuario está autenticado
         if (!isset($_SESSION['id'])) {
             echo json_encode([["mensaje" => "Error: Usuario no autenticado."]]);
             exit;
@@ -164,32 +161,80 @@ class NoticiasController
         );
         
         header('Content-Type: application/json');
-        echo json_encode([
-            ["mensaje" => $respuesta]
-        ]);
+        echo json_encode($respuesta);
         exit;
     }
 
-
-    public function actualizarProyecto($id, $nombre, $descripcion, $id_usuario, $imagenes_guardadas)
+    public function actualizarNoticiaConNuevosArchivos()
     {
-        require 'model/ProyectoModel.php';
-        $proyectoModel = new ProyectoModel();
+
+        // Verificar si se recibieron archivos
+        if (empty($_FILES['archivos']['name'][0])) {
+            echo json_encode([["mensaje" => "No se recibieron archivos."]]);
+            exit;
+        }
+
+        // Extensiones permitidas
+        $extensiones_permitidas = ['png', 'jpg', 'jpeg', 'svg', 'webp', 'mp4', 'avi', 'mkv'];
+
+        // Verificar extensiones antes de procesar archivos
+        if (!$this->verificarExtensionesPermitidas($_FILES['archivos'], $extensiones_permitidas)) {
+            echo json_encode([["mensaje" => "Al menos un archivo tiene un formato no permitido."]]);
+            exit;
+        }
+
+        // Verificar sesión activa
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            echo json_encode([["mensaje" => "Error: Usuario no autenticado."]]);
+            exit;
+        }
+
+        $id_usuario = $_SESSION['id'];
+
+        $archivos_guardados = [];
+        foreach ($_FILES['archivos']['tmp_name'] as $key => $tmp_name) {
+            // Obtener nombre único para el archivo
+            $rutaDestino = $this->definirNombreDeArchivoUnico($_FILES['archivos']['name'][$key]);
+
+            // Intentar mover el archivo a la ruta de destino
+            if ($this->subirImagen($tmp_name, $rutaDestino)) {
+                $archivos_guardados[] = $rutaDestino;
+            } else {
+                echo json_encode([["mensaje" => "Error al subir la imagen: " . $_FILES['archivos']['name'][$key]]]);
+                exit;
+            }
+        }
+
+        // Convertir array de rutas a string separado por comas
+        $urls_concatenadas = implode(',', $archivos_guardados);
+
+        // Insertar la noticia en la base de datos con los archivos subidos
+        $respuesta = $this->insertarActualizacionDeNoticiaConNuevosArchivos($_POST['id'], $_POST['nombre'], $_POST['descripcion'], $id_usuario, $urls_concatenadas);
+
+        header('Content-Type: application/json');
+        echo json_encode($respuesta);
+        exit;
+    }
+
+    private function insertarActualizacionDeNoticiaConNuevosArchivos($id, $nombre, $descripcion, $id_usuario, $urls_concatenadas)
+    {
+        require 'model/NoticiaModel.php';
+        $noticiaModel = new NoticiaModel();
 
         //se ejecuta el metodo para guardar el usuario en base de datos
-        $respuesta = $proyectoModel->actualizarProyecto(
+        $respuesta = $noticiaModel->actualizarNoticiaConNuevosArchivos(
             $id,
             $nombre,
             $descripcion,
             $id_usuario,
-            $imagenes_guardadas
+            $urls_concatenadas
         );
 
         return $respuesta;
     }
 
-
-
+    
 
     /* Funciones complementarias ******************************************************************/
 

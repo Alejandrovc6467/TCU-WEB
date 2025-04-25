@@ -9,7 +9,7 @@
 
 
 
-<script src="public/js/herramientas.js"></script>
+<script src="public/js/herramientasFrontEnd.js"></script>
 
 <?php
 include('public/footer.php');

@@ -247,33 +247,95 @@ CREATE PROCEDURE sp_actualizarNoticiaSinNuevosArchivos (
     IN p_id_usuario INT
 )
 BEGIN
-    DECLARE mensaje TEXT;
+    
 
     DECLARE existe INT;
-    SELECT COUNT(*) INTO existe FROM noticia WHERE id = p_id;
+    SELECT COUNT(*) INTO existe FROM noticias WHERE id = p_id;
 
     IF existe = 0 THEN
-        SET mensaje = 'Error: La noticia no existe.';
+        SELECT 'Error: La noticia no existe.' AS mensaje;
     ELSE
-        UPDATE noticia
+        UPDATE noticias
         SET
             nombre = p_nombre,
             descripcion = p_descripcion,
             id_usuario = p_id_usuario,
-            fecha_actualizacion = NOW()
+            fecha = NOW()
         WHERE id = p_id;
 
-        SET mensaje = 'Actualización exitosa.';
+        SELECT 'Actualización exitosa.' AS mensaje;
     END IF;
 
-    SELECT mensaje;
 END$$
 
 DELIMITER ;
 
 
 
+DELIMITER $$
 
+CREATE PROCEDURE sp_actualizarNoticiaConNuevosArchivos (
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT,
+    IN p_urls TEXT -- URLs separadas por comas
+)
+BEGIN
+    DECLARE v_pos_inicio INT DEFAULT 1;
+    DECLARE v_pos_coma INT;
+    DECLARE v_url_actual VARCHAR(255);
+    DECLARE v_longitud INT;
+    DECLARE v_id_archivo INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error durante la actualización.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Actualizar los datos básicos de la noticia
+    UPDATE noticias 
+    SET nombre = p_nombre, descripcion = p_descripcion, id_usuario = p_id_usuario 
+    WHERE id = p_id;
+
+    -- Obtener todos los id_archivo relacionados a esta noticia y marcarlos como eliminados
+    UPDATE archivo 
+    SET eliminado = TRUE
+    WHERE id IN (
+        SELECT id_archivo FROM noticia_archivo WHERE id_noticia = p_id
+    );
+
+    -- Eliminar relaciones anteriores de la tabla noticia_archivo
+    DELETE FROM noticia_archivo WHERE id_noticia = p_id;
+
+    -- Insertar los nuevos archivos
+    SET v_longitud = CHAR_LENGTH(p_urls);
+
+    WHILE v_pos_inicio <= v_longitud DO
+        SET v_pos_coma = LOCATE(',', p_urls, v_pos_inicio);
+
+        IF v_pos_coma = 0 THEN
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio));
+            SET v_pos_inicio = v_longitud + 1;
+        ELSE
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio, v_pos_coma - v_pos_inicio));
+            SET v_pos_inicio = v_pos_coma + 1;
+        END IF;
+
+        INSERT INTO archivo (url_archivo) VALUES (v_url_actual);
+        SET v_id_archivo = LAST_INSERT_ID();
+
+        INSERT INTO noticia_archivo (id_noticia, id_archivo) VALUES (p_id, v_id_archivo);
+    END WHILE;
+
+    COMMIT;
+    SELECT 'Actualización exitosa.' AS mensaje;
+END$$
+
+DELIMITER ;
 
 
 
