@@ -11,10 +11,10 @@
 
 	<!--Style-->
 	<link rel="stylesheet" href="public/css/base.css?1">
-	<link rel="stylesheet" href="public/css/header.css?136">
+	<link rel="stylesheet" href="public/css/header.css?1">
 	<link rel="stylesheet" href="public/css/footer.css?17">
-	<link rel="stylesheet" href="public/css/inicio.css?8">
-	<link rel="stylesheet" href="public/css/sobreNosotros.css?25">
+	<link rel="stylesheet" href="public/css/inicio.css?9">
+	<link rel="stylesheet" href="public/css/sobreNosotros.css?27">
 	<link rel="stylesheet" href="public/css/noticias.css?6">
 	<link rel="stylesheet" href="public/css/noticiasAdministrador.css?87">
 	<link rel="stylesheet" href="public/css/herramientas.css">

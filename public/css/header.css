@@ -2,26 +2,21 @@
 
 /*nuevo tcu **************************************************/
 
-
 .navbar {
   position: relative;
-  background-color: var(--color-primary);
-  /* padding: 1.0rem 1.5rem; */
+  background-color: var(--colorPrimario);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   width: 100%; 
 
-
   position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 100;
-  background-color: white;
-  
-
 }
 
 .navbar-links {
@@ -36,14 +31,15 @@
 }
 
 .navbar-logo img {
-  width: 6rem;
-  padding: 10px;
+  width: 7rem;
+  padding-left: 10px;
 }
 
 .navbar-links a {
   text-decoration: none;
   color: var(--colortexto);
   color: rgb(73, 73, 73);
+  color: white;
   cursor: pointer;
   font-size: 1.4rem;
 }
@@ -90,10 +86,12 @@
     width: 100%;
     padding: 10px 0;
     margin: 0;
+
   }
 
   .navbar-links a {
     margin: 1rem 1.5rem;
+    color: var(--colortexto);
   }
 
   .navbar.active-navbar .navbar-links {
@@ -111,7 +109,7 @@
   .navbar-hamburger div {
     width: 25px;
     height: 3px;
-    background-color: #333333;
+    background-color: white;
     margin: 5px 0;
     transition: 0.4s;
   }
@@ -156,6 +154,7 @@
 .btn_configuracion i {
   font-size: 30px;
   color: var(--colorTextoP);
+  color: rgb(231, 247, 255);
 }
 
 
@@ -224,4 +223,9 @@
     right: -250px;
     top: -250px;
   }
+
+  .btn_configuracion i {
+    color: var(--colorTextoP);
+  }
+  
 }

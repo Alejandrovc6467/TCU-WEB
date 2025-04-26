@@ -17,6 +17,7 @@
     </div>
     <div class="about-text">
       <h1 class="about__title">¿Quiénes somos?</h1>
+      <h3>Ye' shkẽ̀na bua'ë Ìs be'.</h3>
       <p class="about__description">TC - 768: Apoyo y Fortalecimiento al Sector Empresarial del Cantón de Turrialba; Microempresas, Mujeres Emprendedoras, Asociaciones y Organizaciones.
       </p>
       <p class="about__leader">Liderado por: MGP. Andrea Cedeño Ramírez</p>

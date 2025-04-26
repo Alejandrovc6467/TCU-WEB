@@ -7,14 +7,16 @@
 
 .inicio-title-section{
     background-color: var(--colorPrimario);
+    background-color: white;
     padding: 30px 0px;
     text-align: center;
-    color: white;
+    color: var(--colorPrimario);
 }
 
 .inicio-title-section p{
    font-size: 1.2rem;
    line-height: 0.4; /* Ajusta según el espaciado deseado */
+   
 }
 
 .inicio img{

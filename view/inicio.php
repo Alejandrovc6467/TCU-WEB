@@ -2,7 +2,7 @@
 <div class="inicio">
 
   <div class="inicio-title-section">
-    <h1>Bienvenidos al TC-768</h1>
+    <h1>Bienvenidos al Trabajo Comunal TC-768</h1>
     <p>Apoyo y Fortalecimiento del sector empresarial del cantón de Turrialba</p>
     <p>Gestionando tu empresa</p>
   </div>
