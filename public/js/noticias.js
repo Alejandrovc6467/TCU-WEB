@@ -452,12 +452,13 @@ function handleTipoArchivoChange(event) {
     document.getElementById('archivosNoticia').value = '';
   
 
-    // Aquí puedes manejar cambios en la UI dependiendo del tipo
+    // Manejo de cambios en la UI dependiendo del tipo
     if (tipoArchivoSeleccionado === 'imagen') {
-      // Por ejemplo: cambiar el accept del input file
       document.getElementById('archivosNoticia').accept = 'image/*';
+      document.getElementById('archivosNoticia').multiple = true;
     } else if (tipoArchivoSeleccionado === 'video') {
       document.getElementById('archivosNoticia').accept = 'video/*';
+      document.getElementById('archivosNoticia').multiple = false;
     }
 }
 
