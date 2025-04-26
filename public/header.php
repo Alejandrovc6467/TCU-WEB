@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="public/css/footer.css?17">
 	<link rel="stylesheet" href="public/css/inicio.css?8">
 	<link rel="stylesheet" href="public/css/sobreNosotros.css?25">
-	<link rel="stylesheet" href="public/css/noticias.css?2">
+	<link rel="stylesheet" href="public/css/noticias.css?6">
 	<link rel="stylesheet" href="public/css/noticiasAdministrador.css?87">
 	<link rel="stylesheet" href="public/css/herramientas.css">
 	<link rel="stylesheet" href="public/css/herramientasAdministrador.css?1">

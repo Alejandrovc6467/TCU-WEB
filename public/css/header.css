@@ -72,7 +72,7 @@
 
 
 /* Estilos para la versión móvil */
-@media (max-width: 948px) {
+@media (max-width: 1037px) {
   .navbar-links {
     display: none;
     flex-direction: column;
@@ -218,7 +218,7 @@
 
 
 
-@media all and (max-width:948px) {
+@media all and (max-width:1037px) {
 
   .menu_configuraciones {
     right: -250px;
