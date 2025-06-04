@@ -111,6 +111,216 @@ CREATE TABLE herramienta_archivo (
     id_archivo INT NOT NULL REFERENCES archivo(id)
 );
 
+--crud herramientas ********************************************************************************************************************
+DELIMITER $$
+
+CREATE PROCEDURE sp_obtenerHerramientas()
+BEGIN
+    -- Seleccionar herramientas no eliminadas junto con sus archivos relacionados no eliminados
+    SELECT 
+        h.id AS id_herramienta,
+        h.nombre,
+        h.descripcion,
+        h.fecha,
+        h.tipo,
+        a.id AS id_archivo,
+        a.url_archivo
+    FROM 
+        herramientas h
+    LEFT JOIN 
+        herramienta_archivo ha ON h.id = ha.id_herramienta
+    LEFT JOIN 
+        archivo a ON ha.id_archivo = a.id AND a.eliminado = FALSE
+    WHERE 
+        h.eliminado = FALSE
+    ORDER BY 
+        h.id, a.id;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_eliminarHerramienta(IN p_id_herramienta INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error al eliminar la herramienta.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Marcar los archivos asociados como eliminados
+    UPDATE archivo 
+    SET eliminado = TRUE
+    WHERE id IN (
+        SELECT id_archivo 
+        FROM herramienta_archivo 
+        WHERE id_herramienta = p_id_herramienta
+    );
+
+    -- Marcar la herramienta como eliminada
+    UPDATE herramientas 
+    SET eliminado = TRUE 
+    WHERE id = p_id_herramienta;
+
+    COMMIT;
+    SELECT 'La herramienta y sus archivos fueron eliminados correctamente.' AS mensaje;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_ingresarHerramienta (
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_tipo VARCHAR(10),
+    IN p_id_usuario INT,
+    IN p_urls TEXT -- URLs separadas por comas
+)
+BEGIN
+    DECLARE v_id_herramienta INT;
+    DECLARE v_pos_inicio INT DEFAULT 1;
+    DECLARE v_pos_coma INT;
+    DECLARE v_url_actual VARCHAR(255);
+    DECLARE v_longitud INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error al insertar la herramienta.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Insertar la herramienta
+    INSERT INTO herramientas (nombre, descripcion, tipo, fecha, id_usuario)
+    VALUES (p_nombre, p_descripcion, p_tipo, NOW(), p_id_usuario);
+
+    SET v_id_herramienta = LAST_INSERT_ID();
+    SET v_longitud = CHAR_LENGTH(p_urls);
+
+    WHILE v_pos_inicio <= v_longitud DO
+        SET v_pos_coma = LOCATE(',', p_urls, v_pos_inicio);
+
+        IF v_pos_coma = 0 THEN
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio));
+            SET v_pos_inicio = v_longitud + 1;
+        ELSE
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio, v_pos_coma - v_pos_inicio));
+            SET v_pos_inicio = v_pos_coma + 1;
+        END IF;
+
+        -- Insertar archivo
+        INSERT INTO archivo (url_archivo) VALUES (v_url_actual);
+        SET @id_archivo = LAST_INSERT_ID();
+
+        -- Insertar relación herramienta_archivo
+        INSERT INTO herramienta_archivo (id_herramienta, id_archivo) VALUES (v_id_herramienta, @id_archivo);
+    END WHILE;
+
+    COMMIT;
+    SELECT 'Se agregó la herramienta correctamente.' AS mensaje;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_actualizarHerramientaSinNuevosArchivos (
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion TEXT,
+    IN p_id_usuario INT
+)
+BEGIN
+    DECLARE existe INT;
+    SELECT COUNT(*) INTO existe FROM herramientas WHERE id = p_id;
+
+    IF existe = 0 THEN
+        SELECT 'Error: La herramienta no existe.' AS mensaje;
+    ELSE
+        UPDATE herramientas
+        SET
+            nombre = p_nombre,
+            descripcion = p_descripcion,
+            id_usuario = p_id_usuario,
+            fecha = NOW()
+        WHERE id = p_id;
+
+        SELECT 'Actualización exitosa.' AS mensaje;
+    END IF;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_actualizarHerramientaConNuevosArchivos (
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT,
+    IN p_urls TEXT -- URLs separadas por comas
+)
+BEGIN
+    DECLARE v_pos_inicio INT DEFAULT 1;
+    DECLARE v_pos_coma INT;
+    DECLARE v_url_actual VARCHAR(255);
+    DECLARE v_longitud INT;
+    DECLARE v_id_archivo INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error durante la actualización.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Actualizar los datos básicos de la herramienta
+    UPDATE herramientas 
+    SET nombre = p_nombre, descripcion = p_descripcion, id_usuario = p_id_usuario 
+    WHERE id = p_id;
+
+    -- Obtener todos los id_archivo relacionados a esta herramienta y marcarlos como eliminados
+    UPDATE archivo 
+    SET eliminado = TRUE
+    WHERE id IN (
+        SELECT id_archivo FROM herramienta_archivo WHERE id_herramienta = p_id
+    );
+
+    -- Eliminar relaciones anteriores de la tabla herramienta_archivo
+    DELETE FROM herramienta_archivo WHERE id_herramienta = p_id;
+
+    -- Insertar los nuevos archivos
+    SET v_longitud = CHAR_LENGTH(p_urls);
+
+    WHILE v_pos_inicio <= v_longitud DO
+        SET v_pos_coma = LOCATE(',', p_urls, v_pos_inicio);
+
+        IF v_pos_coma = 0 THEN
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio));
+            SET v_pos_inicio = v_longitud + 1;
+        ELSE
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio, v_pos_coma - v_pos_inicio));
+            SET v_pos_inicio = v_pos_coma + 1;
+        END IF;
+
+        INSERT INTO archivo (url_archivo) VALUES (v_url_actual);
+        SET v_id_archivo = LAST_INSERT_ID();
+
+        INSERT INTO herramienta_archivo (id_herramienta, id_archivo) VALUES (p_id, v_id_archivo);
+    END WHILE;
+
+    COMMIT;
+    SELECT 'Actualización exitosa.' AS mensaje;
+END$$
+
+DELIMITER ;
 
 --crud noticias ********************************************************************************************************************
 
@@ -140,9 +350,6 @@ BEGIN
 END $$
 
 DELIMITER ;
-
-
-
 
 DELIMITER $$
 
@@ -175,10 +382,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
-
-
 
 DELIMITER $$
 
@@ -236,8 +439,6 @@ END$$
 
 DELIMITER ;
 
-
-
 DELIMITER $$
 
 CREATE PROCEDURE sp_actualizarNoticiaSinNuevosArchivos (
@@ -269,8 +470,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-
 
 DELIMITER $$
 
@@ -337,11 +536,7 @@ END$$
 
 DELIMITER ;
 
-
-
-
 -- crud usuarios ********************************************************************************************************************
-
 
 DELIMITER $$
 
