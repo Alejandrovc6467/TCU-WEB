@@ -2,14 +2,9 @@
 include('public/header.php');
 ?>
 
-
 <h1 class="sobreNosotros_title">Sobre nosotros</h1>
 
-
-
 <div class="about">
-
-
 
   <section class="about-section">
     <div class="about-image">
@@ -17,7 +12,6 @@ include('public/header.php');
     </div>
     <div class="about-text">
       <h1 class="about__title">¿Quiénes somos?</h1>
-      <h3>Ye' shkẽ̀na bua'ë Ìs be'.</h3>
       <p class="about__description">TC - 768: Apoyo y Fortalecimiento al Sector Empresarial del Cantón de Turrialba;
         Microempresas, Mujeres Emprendedoras, Asociaciones y Organizaciones.
       </p>
@@ -26,11 +20,6 @@ include('public/header.php');
         Atlántico y encargada del proyecto TC - 768.</p>
     </div>
   </section>
-
-
-
-
-
 
   <section class="about-section color-section">
 
@@ -47,7 +36,6 @@ include('public/header.php');
     </div>
 
   </section>
-
 
   <section class="about-section">
 
@@ -72,8 +60,6 @@ include('public/header.php');
 
   </section>
 
-
-
   <section class="about-section color-section">
 
     <div class="about-image">
@@ -95,7 +81,6 @@ include('public/header.php');
 
   </section>
 
-
   <section class="about-section">
     <div class="about-image">
 
@@ -109,7 +94,6 @@ include('public/header.php');
         identificados para promover una mejor gestión empresarial.</p>
     </div>
   </section>
-
 
   <section class="about-section color-section">
     <div class="about-image">
@@ -138,10 +122,7 @@ include('public/header.php');
     </div>
   </section>
 
-
 </div>
-
-
 
 <div class="titulo_timeline_container">
   <h3>Línea de tiempo de las actividades, metas, hitos y logros del TCU</h3>
@@ -233,10 +214,6 @@ include('public/header.php');
     </li>
   </ul>
 </div>
-
-
-
-
 
 <div class="proyectos_front_container">
 

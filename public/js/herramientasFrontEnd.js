@@ -1,6 +1,6 @@
-// Llamado de la funcion para cargar las noticias el frontend de usuario normal
-function obtenerNoticiasParaFrontEndUsuario() {
-    console.log('Voy a cargar las noticias para el frontend de usuario normal');
+// Llamado de la funcion para cargar las herramientas el frontend de usuario normal
+function obtenerHerramientasParaFrontEndUsuario() {
+    console.log('Voy a cargar las herramientas para el frontend de usuario normal');
 
     $.ajax({
         type: "POST",
@@ -8,29 +8,29 @@ function obtenerNoticiasParaFrontEndUsuario() {
         dataType: "json",
         success: function (response) {
             console.log(response);
-            // Limpiar el contenedor de noticias
-            $('.noticias-items').empty();
-            
-            // Recorrer todas las noticias recibidas
-            response.forEach(function(noticia) {
-                // Crear elemento HTML para la noticia
-                let noticiaHTML = '';
-                
-                // Verificar el tipo de noticia (imagen o video)
-                if (noticia.tipo === 'imagen') {
-                    // Crear estructura para noticia con imágenes
-                    noticiaHTML = crearNoticiaConImagenes(noticia);
-                } else if (noticia.tipo === 'video') {
-                    // Crear estructura para noticia con video
-                    noticiaHTML = crearNoticiaConVideo(noticia);
+            // Limpiar el contenedor de herramientas
+            $('.herramientas-items').empty();
+
+            // Recorrer todas las herramientas recibidas
+            response.forEach(function (herramienta) {
+                // Crear elemento HTML para la herramienta
+                let herramientaHTML = '';
+
+                // Verificar el tipo de herramienta (imagen o video)
+                if (herramienta.tipo === 'imagen') {
+                    // Crear estructura para herramienta con imágenes
+                    herramientaHTML = crearHerramientaConImagenes(herramienta);
+                } else if (herramienta.tipo === 'video') {
+                    // Crear estructura para herramienta con video
+                    herramientaHTML = crearHerramientaConVideo(herramienta);
                 }
-                
-                // Agregar la noticia al contenedor
-                $('.noticias-items').append(noticiaHTML);
-                
-                // Inicializar el carrusel para esta noticia si es de tipo imagen
-                if (noticia.tipo === 'imagen' && noticia.archivos.length > 1) {
-                    inicializarCarrusel(noticia.id);
+
+                // Agregar la herramienta al contenedor
+                $('.herramientas-items').append(herramientaHTML);
+
+                // Inicializar el carrusel para esta herramienta si es de tipo imagen
+                if (herramienta.tipo === 'imagen' && herramienta.archivos.length > 1) {
+                    inicializarCarrusel(herramienta.id);
                 }
             });
         },
@@ -39,95 +39,95 @@ function obtenerNoticiasParaFrontEndUsuario() {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'No se pudieron cargar las noticias',
+                text: 'No se pudieron cargar las herramientas',
                 confirmButtonColor: '#088cff'
             });
         }
     });
 }
 
-// Función para crear una noticia con imágenes
-function crearNoticiaConImagenes(noticia) {
-    let noticiaHTML = `
-        <div class="noticia-item" data-noticia-id="${noticia.id}">
-            <div class="noticia-item-archivos">
+// Función para crear una herramienta con imágenes
+function crearHerramientaConImagenes(herramienta) {
+    let herramientaHTML = `
+        <div class="herramienta-item" data-herramienta-id="${herramienta.id}">
+            <div class="herramienta-item-archivos">
                 <div class="galeria-container">
-                    <div class="galeria" id="galeria-${noticia.id}">`;
-    
+                    <div class="galeria" id="galeria-${herramienta.id}">`;
+
     // Crear contenedores para todas las imágenes
-    noticia.archivos.forEach((archivo, index) => {
-        noticiaHTML += `
+    herramienta.archivos.forEach((archivo, index) => {
+        herramientaHTML += `
             <div class="imagen-container ${index === 0 ? 'activa' : ''}">
-                <img src="${archivo.url}" alt="${noticia.nombre}">
+                <img src="${archivo.url}" alt="${herramienta.nombre}">
             </div>`;
     });
-    
+
     // Agregar botones de navegación si hay más de una imagen
-    if (noticia.archivos.length > 1) {
-        noticiaHTML += `
+    if (herramienta.archivos.length > 1) {
+        herramientaHTML += `
             <div class="botones-navegacion">
-                <button class="boton anterior" id="anterior-${noticia.id}">
+                <button class="boton anterior" id="anterior-${herramienta.id}">
                     <span class="material-icons">chevron_left</span>
                 </button>
-                <button class="boton siguiente" id="siguiente-${noticia.id}">
+                <button class="boton siguiente" id="siguiente-${herramienta.id}">
                     <span class="material-icons">chevron_right</span>
                 </button>
             </div>
             
-            <div class="indicadores" id="indicadores-${noticia.id}">
+            <div class="indicadores" id="indicadores-${herramienta.id}">
                 <!-- Los indicadores se generarán por JavaScript -->
             </div>`;
     }
-    
-    noticiaHTML += `
+
+    herramientaHTML += `
                     </div>
                 </div>
             </div>
-            <div class="noticia-item-informacion">
-                <h1 class="noticia-item-titulo">${noticia.nombre}</h1>
-                <p class="noticia-item-descipcion">${noticia.descripcion}</p>
+            <div class="herramienta-item-informacion">
+                <h1 class="herramienta-item-titulo">${herramienta.nombre}</h1>
+                <p class="herramienta-item-descipcion">${herramienta.descripcion}</p>
             </div>
         </div>`;
-    
-    return noticiaHTML;
+
+    return herramientaHTML;
 }
 
-// Función para crear una noticia con video
-function crearNoticiaConVideo(noticia) {
+// Función para crear una herramienta con video
+function crearHerramientaConVideo(herramienta) {
     // Asumimos que solo hay un archivo de video
-    const videoUrl = noticia.archivos.length > 0 ? noticia.archivos[0].url : '';
-    
-    let noticiaHTML = `
-        <div class="noticia-item" data-noticia-id="${noticia.id}">
-            <div class="noticia-item-archivos">
-                <div class="noticia-video-container">
-                    <video width="250" controls>
+    const videoUrl = herramienta.archivos.length > 0 ? herramienta.archivos[0].url : '';
+
+    let herramientaHTML = `
+        <div class="herramienta-item" data-herramienta-id="${herramienta.id}">
+            <div class="herramienta-item-archivos">
+                <div class="herramienta-video-container">
+                    <video width="430" controls preload="metadata">
                         <source src="${videoUrl}" type="video/mp4">
                         Your browser does not support HTML video.
                     </video>
                 </div>
             </div>
-            <div class="noticia-item-informacion">
-                <h1 class="noticia-item-titulo">${noticia.nombre}</h1>
-                <p class="noticia-item-descipcion">${noticia.descripcion}</p>
+            <div class="herramienta-item-informacion">
+                <h1 class="herramienta-item-titulo">${herramienta.nombre}</h1>
+                <p class="herramienta-item-descipcion">${herramienta.descripcion}</p>
             </div>
         </div>`;
-    
-    return noticiaHTML;
+
+    return herramientaHTML;
 }
 
-// Función para inicializar el carrusel para una noticia específica
-function inicializarCarrusel(noticiaId) {
-    const galeria = document.getElementById(`galeria-${noticiaId}`);
+// Función para inicializar el carrusel para una herramienta específica
+function inicializarCarrusel(herramientaId) {
+    const galeria = document.getElementById(`galeria-${herramientaId}`);
     if (!galeria) return;
-    
+
     const imagenes = galeria.querySelectorAll('.imagen-container');
-    const indicadoresContainer = document.getElementById(`indicadores-${noticiaId}`);
-    const btnAnterior = document.getElementById(`anterior-${noticiaId}`);
-    const btnSiguiente = document.getElementById(`siguiente-${noticiaId}`);
-    
+    const indicadoresContainer = document.getElementById(`indicadores-${herramientaId}`);
+    const btnAnterior = document.getElementById(`anterior-${herramientaId}`);
+    const btnSiguiente = document.getElementById(`siguiente-${herramientaId}`);
+
     let indiceActual = 0;
-    
+
     // Generar los indicadores
     imagenes.forEach((_, indice) => {
         const indicador = document.createElement('div');
@@ -140,50 +140,50 @@ function inicializarCarrusel(noticiaId) {
         });
         indicadoresContainer.appendChild(indicador);
     });
-    
+
     const indicadores = indicadoresContainer.querySelectorAll('.indicador');
-    
+
     function mostrarImagen(indice) {
         // Ocultar todas las imágenes
         imagenes.forEach(imagen => {
             imagen.classList.remove('activa');
         });
-        
+
         // Desactivar todos los indicadores
         indicadores.forEach(indicador => {
             indicador.classList.remove('activo');
         });
-        
+
         // Mostrar la imagen seleccionada
         imagenes[indice].classList.add('activa');
-        
+
         // Activar el indicador seleccionado
         indicadores[indice].classList.add('activo');
-        
+
         // Actualizar el índice actual
         indiceActual = indice;
     }
-    
+
     // Evento para botón anterior
     btnAnterior.addEventListener('click', () => {
         indiceActual = (indiceActual - 1 + imagenes.length) % imagenes.length;
         mostrarImagen(indiceActual);
     });
-    
+
     // Evento para botón siguiente
     btnSiguiente.addEventListener('click', () => {
         indiceActual = (indiceActual + 1) % imagenes.length;
         mostrarImagen(indiceActual);
     });
-    
+
     // También permitir navegación con teclado para esta galería específica
     // (esto solo funciona bien si hay una galería en pantalla a la vez)
     document.addEventListener('keydown', (e) => {
-        // Solo procesar si esta noticia está en el viewport
-        const noticia = document.querySelector(`[data-noticia-id="${noticiaId}"]`);
-        const rect = noticia.getBoundingClientRect();
+        // Solo procesar si esta herramienta está en el viewport
+        const herramienta = document.querySelector(`[data-herramienta-id="${herramientaId}"]`);
+        const rect = herramienta.getBoundingClientRect();
         const isInViewport = rect.top >= 0 && rect.bottom <= window.innerHeight;
-        
+
         if (isInViewport) {
             if (e.key === 'ArrowLeft') {
                 indiceActual = (indiceActual - 1 + imagenes.length) % imagenes.length;
@@ -196,7 +196,7 @@ function inicializarCarrusel(noticiaId) {
     });
 }
 
-// Llamar a la función para cargar las noticias cuando el documento esté listo
-$(document).ready(function() {
-    obtenerNoticiasParaFrontEndUsuario();
+// Llamar a la función para cargar las herramientas cuando el documento esté listo
+$(document).ready(function () {
+    obtenerHerramientasParaFrontEndUsuario();
 });

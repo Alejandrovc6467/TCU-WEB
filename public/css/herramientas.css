@@ -1,242 +1,206 @@
-/*Estilos para noticias frontEnd usuarios*/
+/*Estilos para herramientas frontEnd usuarios*/
 
-.container-noticias{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 100px;
-}
-
-.noticias-title{
-    color: var(--titulo);
-    text-align: center;
-    padding-top: 50px;
+.container-herramientas {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 100px;
 }
 
-.noticias-title-text{
-    color: var(--colortexto);
-    text-align: center;
-    margin-bottom: 20px;
+.herramientas-title {
+  color: var(--titulo);
+  text-align: center;
+  padding-top: 50px;
 }
 
-.subcontainer-noticias{
-    width: 90%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.herramientas-title-text {
+  color: var(--colortexto);
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-
-.noticias-items{
-    width: 100%; 
+.subcontainer-herramientas {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.noticia-item{
-    display: flex;
-    width: 100%; 
-    margin-bottom: 100px;
-    /* background-color: pink; */
-}
- 
-.noticia-item-archivos{
-    width: 40%;
-    padding: 15px;
-    /* background-color: green; */
-    display: flex;
-    justify-content: center;
-}
- 
-
-.noticia-item-informacion{
-    width: 60%;
-    padding-left: 15px;
-    /* background-color: orange; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.herramientas-items {
+  width: 100%;
 }
 
-.noticia-item-titulo{
-    color: var(--titulo);
-    font-size: 25px;
+.herramienta-item {
+  display: flex;
+  width: 100%;
+  margin-bottom: 100px;
+  /* background-color: pink; */
 }
- 
-.noticia-item-descipcion{
-    color: var(--colortexto);
+
+.herramienta-item-archivos {
+  width: 40%;
+  padding: 15px;
+  /* background-color: green; */
+  display: flex;
+  justify-content: center;
 }
- 
- 
+
+.herramienta-item-informacion {
+  width: 60%;
+  padding-left: 15px;
+  /* background-color: orange; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.herramienta-item-titulo {
+  color: var(--titulo);
+  font-size: 25px;
+}
+
+.herramienta-item-descipcion {
+  color: var(--colortexto);
+}
 
 /* Estilos para el carrusel de imagenes ************************************************************/
 
 .galeria-container {
-    width: 90%;
-    max-width: 800px;
-    overflow: hidden;
-    position: relative;
-    /* background-color: blue; */
+  width: 90%;
+  max-width: 800px;
+  overflow: hidden;
+  position: relative;
+  /* background-color: blue; */
 }
 
 .galeria {
-    position: relative;
-    width: 100%;
-    height: 450px;
-    overflow: hidden;
-    /* background-color: aqua;   */
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+  /* background-color: aqua;   */
 }
 
 .imagen-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    display: flex;
-    align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
 }
 
 .imagen-container.activa {
-    opacity: 1;
+  opacity: 1;
 }
 
 .imagen-container img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 10px;
 }
 
 .botones-navegacion {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .boton {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%; /* Botones circulares */
-    background-color: rgba(255, 255, 255, 0); /* Fondo más transparente */
-    backdrop-filter: blur(1px); /* Efecto de desenfoque */
-    -webkit-backdrop-filter: blur(5px); /* Soporte para Safari */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 15px;
-    pointer-events: auto; /* Para permitir clics en los botones */
-    transition: background-color 0.3s;
-    color: white;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%; /* Botones circulares */
+  background-color: rgba(255, 255, 255, 0); /* Fondo más transparente */
+  backdrop-filter: blur(1px); /* Efecto de desenfoque */
+  -webkit-backdrop-filter: blur(5px); /* Soporte para Safari */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  pointer-events: auto; /* Para permitir clics en los botones */
+  transition: background-color 0.3s;
+  color: white;
 }
 
 .boton:hover {
-    background-color: rgba(192, 192, 192, 0.2); 
+  background-color: rgba(192, 192, 192, 0.2);
 }
 
 .anterior {
-    left: 3px;
+  left: 3px;
 }
 
 .siguiente {
-    right: 3px;  
+  right: 3px;
 }
 
 .indicadores {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 0;
-    padding-top: 30px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0;
+  padding-top: 30px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
 }
 
 .indicador {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(87, 87, 87, 0.473);
-    cursor: pointer;
-    transition: background-color 0.3s;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(87, 87, 87, 0.473);
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .indicador.activo {
-    background-color: #3498db;
+  background-color: #3498db;
 }
-
-
-
 
 /* Estilos para video *************************************************************************/
 
+.herramienta-video-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+}
 
-.noticia-video-container {
-    display: flex;
-    justify-content: center;
+.herramienta-video-container video {
+  border-radius: 15px;
+}
+
+@media all and (max-width: 1037px) {
+  .herramienta-item {
+    flex-direction: column;
+  }
+
+  .herramienta-item-archivos {
     width: 100%;
-    max-width: 800px;
+  }
 
-}
+  .herramienta-item-informacion {
+    width: 100%;
+    padding-top: 25px;
+  }
 
-.noticia-video-container video{
-   border-radius: 15px;
-}
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media all and (max-width:1037px) {
-
-    .noticia-item{
-        flex-direction: column;
-    }
-
-    .noticia-item-archivos{
-        width: 100%;
-    }
-     
-    .noticia-item-informacion{
-        width: 100%;
-        padding-top: 25px;
-    }
-
-    .galeria-container {
-        width: 100%;
-        max-width: 400px;
-    }
-
+  .galeria-container {
+    width: 100%;
+    max-width: 400px;
+  }
 }

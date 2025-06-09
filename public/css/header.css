@@ -1,5 +1,3 @@
-
-
 /*nuevo tcu **************************************************/
 
 .navbar {
@@ -10,7 +8,7 @@
   align-items: center;
   justify-content: space-between;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  width: 100%; 
+  width: 100%;
 
   position: fixed !important;
   top: 0;
@@ -31,7 +29,7 @@
 }
 
 .navbar-logo img {
-  width: 7rem;
+  width: 8rem;
   padding-left: 10px;
 }
 
@@ -65,8 +63,6 @@
   background-color: white;
 }
 
-
-
 /* Estilos para la versión móvil */
 @media (max-width: 1037px) {
   .navbar-links {
@@ -86,7 +82,6 @@
     width: 100%;
     padding: 10px 0;
     margin: 0;
-
   }
 
   .navbar-links a {
@@ -127,9 +122,6 @@
   }
 }
 
-
-
-
 /********************************************************  container_btnCerrarSesion  ***************************************/
 
 .container_configuracion {
@@ -144,11 +136,8 @@
 }
 
 .btn_configuracion {
-
   background-color: transparent;
   border: none;
-
-
 }
 
 .btn_configuracion i {
@@ -156,7 +145,6 @@
   color: var(--colorTextoP);
   color: rgb(231, 247, 255);
 }
-
 
 .menu_configuraciones {
   display: none;
@@ -169,41 +157,40 @@
   border-radius: 10px;
   color: var(--colorTextoP);
   background-color: #f9f9f9;
-  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+    rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 }
 
 .infoMenu_container {
   text-align: center;
 }
 .infoMenu_container i {
- font-size: 30px;
+  font-size: 30px;
 }
-.nombre_infoMenu{
+.nombre_infoMenu {
   margin-top: 5px;
   font-size: 14px;
   font-weight: bold;
 }
-.correo_infoMenu{
+.correo_infoMenu {
   font-size: 11px;
   margin-top: -10px;
 }
-.rol_infoMenu{
+.rol_infoMenu {
   font-size: 13px;
   margin-top: -10px;
 }
 
-.menu_opciones{
-  display:flex;
+.menu_opciones {
+  display: flex;
   flex-direction: column;
 }
 
-.menu_opciones a{
+.menu_opciones a {
   color: var(--colorTextoP);
   font-size: 16px;
   margin: 6px 0;
- 
 }
-
 
 .btnCerrarSesion {
   border: none;
@@ -215,10 +202,7 @@
   margin-top: 20px;
 }
 
-
-
-@media all and (max-width:1037px) {
-
+@media all and (max-width: 1037px) {
   .menu_configuraciones {
     right: -250px;
     top: -250px;
@@ -227,5 +211,4 @@
   .btn_configuracion i {
     color: var(--colorTextoP);
   }
-  
 }
