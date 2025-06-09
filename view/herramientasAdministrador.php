@@ -2,17 +2,16 @@
 include('public/header.php');
 ?>
 
-<div class="noticiasAdmin-container">
+<div class="herramientas-admin-container">
 
-  <h1 class="noticiasAdmin_title">Herramientas</h1>
-
+  <h1 class="herramientas-admin-title">Herramientas</h1>
 
   <div class="formulario_container">
 
-    <form id="agregarNoticia">
+    <form id="agregarHerramienta">
 
       <div class="mb-3">
-        <label for="basic-url" class="form-label">Ingrese el nombre de la noticia:</label>
+        <label for="basic-url" class="form-label">Ingrese el nombre de la herramienta:</label>
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1"><i class="bi bi-info-circle-fill"
               style="color: #a3a3a3;"></i></span>
@@ -22,7 +21,7 @@ include('public/header.php');
       </div>
 
       <div class="mb-3">
-        <label for="basic-url" class="form-label">Ingrese la descripción de la noticia:</label>
+        <label for="basic-url" class="form-label">Ingrese la descripción de la herramienta:</label>
         <div class="input-group">
           <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-info-circle-fill"
               style="color: #a3a3a3;"></i></label>
@@ -30,7 +29,6 @@ include('public/header.php');
             aria-describedby="basic-addon1" maxlength="255" required></textarea>
         </div>
       </div>
-
 
       <div class="mb-3">
         <label class="form-label">Seleccione el tipo de archivo:</label>
@@ -47,13 +45,13 @@ include('public/header.php');
       </div>
 
       <div class="mb-3">
-        <label for="basic-url" class="form-label">Ingrese los archivos de la noticia: <p
+        <label for="basic-url" class="form-label">Ingrese los archivos de la herramienta: <p
             class="formatos-permitodos-text">Formatos permitidos: png, jpg, jpeg, svg, webp, mp4, avi, mkv</p></label>
         <div class="input-group">
-          <label class="input-group-text" for="archivosNoticia">
+          <label class="input-group-text" for="archivosHerramienta">
             <i class="bi bi-file-earmark-arrow-up-fill" style="color: #a3a3a3;"></i>
           </label>
-          <input class="form-control" type="file" id="archivosNoticia" name="archivosNoticia" multiple required>
+          <input class="form-control" type="file" id="archivosHerramienta" name="archivosHerramienta" multiple required>
         </div>
 
         <!-- Contenedor para la vista previa -->
@@ -63,8 +61,8 @@ include('public/header.php');
       </div>
 
       <div class="conatainerBotonFormularioModal">
-        <button type="submit" value="Registrar" id="buttonRegistrarNoticia" class="butonAgregar">Agregar
-          Noticia</button>
+        <button type="submit" value="Registrar" id="buttonRegistrarHerramienta" class="butonAgregar">Agregar
+          Herramienta</button>
       </div>
 
     </form>
@@ -87,12 +85,9 @@ include('public/header.php');
     </table>
   </div>
 
-
 </div>
 
-
-
-<script src="public/js/herramientas.js?8"></script>
+<script src="public/js/herramientasAdministrador.js?8"></script>
 
 <?php
 include('public/footer.php');

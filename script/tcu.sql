@@ -134,7 +134,8 @@ BEGIN
     WHERE 
         h.eliminado = FALSE
     ORDER BY 
-        h.id, a.id;
+        h.id
+    DESC;
 END $$
 
 DELIMITER ;
@@ -830,8 +831,7 @@ END$$
 DELIMITER ;
 
 
--- crud proyectos y imagenes ********************************************************************************************************************
-
+-- crud proyectos ********************************************************************************************************************
 
 DELIMITER $$
 
@@ -1041,6 +1041,208 @@ BEGIN
     IF error_occurred THEN
         SELECT 'Ocurrió un error al eliminar el proyecto.' AS mensaje;
         ROLLBACK;
+    END IF;
+
+END$$
+
+DELIMITER ;
+
+-- Procedimiento para proyectos actializados
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_obtenerProyectos()
+BEGIN
+    SELECT 
+        p.id AS id_proyecto,
+        p.nombre,
+        p.descripcion,
+        p.fecha,
+        p.id_usuario,
+        ip.id AS id_imagen,
+        ip.url_archivo
+    FROM 
+        proyecto p
+    LEFT JOIN 
+        imagen_proyecto ip ON p.id = ip.id_proyecto AND ip.eliminado = FALSE
+    WHERE 
+        p.eliminado = FALSE
+    ORDER BY p.id DESC;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_insertarProyecto (
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT,
+    IN p_urls TEXT -- URLs separadas por comas
+)
+BEGIN
+    DECLARE v_id_proyecto INT;
+    DECLARE v_pos_inicio INT DEFAULT 1;
+    DECLARE v_pos_coma INT;
+    DECLARE v_url_actual VARCHAR(255);
+    DECLARE v_longitud INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error al insertar el proyecto.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO proyecto (nombre, descripcion, fecha, id_usuario, eliminado)
+    VALUES (p_nombre, p_descripcion, NOW(), p_id_usuario, FALSE);
+
+    SET v_id_proyecto = LAST_INSERT_ID();
+    SET v_longitud = CHAR_LENGTH(p_urls);
+
+    WHILE v_pos_inicio <= v_longitud DO
+        SET v_pos_coma = LOCATE(',', p_urls, v_pos_inicio);
+
+        IF v_pos_coma = 0 THEN
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio));
+            SET v_pos_inicio = v_longitud + 1;
+        ELSE
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio, v_pos_coma - v_pos_inicio));
+            SET v_pos_inicio = v_pos_coma + 1;
+        END IF;
+
+        INSERT INTO imagen_proyecto (url_archivo, id_proyecto)
+        VALUES (v_url_actual, v_id_proyecto);
+    END WHILE;
+
+    COMMIT;
+    SELECT 'Proyecto ingresado con éxito.' AS mensaje, v_id_proyecto AS id;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_actualizarProyectoConImagenes (
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT,
+    IN p_urls TEXT
+)
+BEGIN
+    DECLARE v_pos_inicio INT DEFAULT 1;
+    DECLARE v_pos_coma INT;
+    DECLARE v_url_actual VARCHAR(255);
+    DECLARE v_longitud INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error durante la actualización.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Actualiza los datos del proyecto
+    UPDATE proyecto 
+    SET nombre = p_nombre,
+        descripcion = p_descripcion,
+        id_usuario = p_id_usuario,
+        fecha = NOW()
+    WHERE id = p_id;
+
+    -- Elimina lógicamente las imágenes actuales
+    UPDATE imagen_proyecto
+    SET eliminado = TRUE
+    WHERE id_proyecto = p_id;
+
+    -- Inserta las nuevas imágenes
+    SET v_longitud = CHAR_LENGTH(p_urls);
+
+    WHILE v_pos_inicio <= v_longitud DO
+        SET v_pos_coma = LOCATE(',', p_urls, v_pos_inicio);
+
+        IF v_pos_coma = 0 THEN
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio));
+            SET v_pos_inicio = v_longitud + 1;
+        ELSE
+            SET v_url_actual = TRIM(SUBSTRING(p_urls, v_pos_inicio, v_pos_coma - v_pos_inicio));
+            SET v_pos_inicio = v_pos_coma + 1;
+        END IF;
+
+        INSERT INTO imagen_proyecto (url_archivo, id_proyecto) 
+        VALUES (v_url_actual, p_id);
+    END WHILE;
+
+    COMMIT;
+    SELECT 'Actualización exitosa.' AS mensaje;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_eliminarProyecto (
+    IN p_id INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error al eliminar el proyecto.' AS mensaje;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE proyecto 
+    SET eliminado = TRUE 
+    WHERE id = p_id;
+
+    UPDATE imagen_proyecto
+    SET eliminado = TRUE 
+    WHERE id_proyecto = p_id;
+
+    COMMIT;
+    SELECT 'Proyecto y sus imágenes eliminados correctamente.' AS mensaje;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_actualizarProyectoSinImagenes (
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion VARCHAR(500),
+    IN p_id_usuario INT
+)
+BEGIN
+    DECLARE existe INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Ocurrió un error durante la actualización del proyecto.' AS mensaje;
+    END;
+
+    SELECT COUNT(*) INTO existe FROM proyecto WHERE id = p_id AND eliminado = FALSE;
+
+    IF existe = 0 THEN
+        SELECT 'Error: El proyecto no existe o está eliminado.' AS mensaje;
+    ELSE
+        START TRANSACTION;
+
+        UPDATE proyecto 
+        SET nombre = p_nombre,
+            descripcion = p_descripcion,
+            id_usuario = p_id_usuario,
+            fecha = NOW()
+        WHERE id = p_id;
+
+        COMMIT;
+        SELECT 'Actualización exitosa.' AS mensaje;
     END IF;
 
 END$$

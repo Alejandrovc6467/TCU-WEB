@@ -1,83 +1,81 @@
-<?php
-include('public/header.php');
-?>
+<?php include('public/header.php'); ?>
 
 <link rel="stylesheet" href="public/css/proyectos.css">
 
-<!-- Contenido principal de la vista para ingresar proyectos -->
 <div class="proyectos_container">
-
     <h1 class="proyectos_title">Proyectos</h1>
 
-    <!-- Formulario par ingresar proyectos -->
+    <!-- Formulario para agregar/editar proyectos -->
     <div class="formulario_container">
-
-        <form id="agregarProyecto">
-
+        <form id="agregarProyecto" enctype="multipart/form-data">
+            <!-- Nombre del proyecto -->
             <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingrese el nombre de la proyecto:</label>
+                <label for="nombre" class="form-label">Nombre del proyecto:</label>
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-info-circle-fill"
-                            style="color: #a3a3a3;"></i></span>
-                    <input type="text" class="form-control" placeholder="" id="nombre" aria-label="nombre"
-                        aria-describedby="basic-addon1" maxlength="255" required>
+                    <span class="input-group-text">
+                        <i class="bi bi-info-circle-fill" style="color: #a3a3a3;"></i>
+                    </span>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="255" required>
                 </div>
             </div>
 
+            <!-- Descripción del proyecto -->
             <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingrese la descripción de la proyecto:</label>
+                <label for="descripcion" class="form-label">Descripción del proyecto:</label>
                 <div class="input-group">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-info-circle-fill"
-                            style="color: #a3a3a3;"></i></label>
-                    <textarea class="form-control" placeholder="" id="descripcion" aria-label="descripcion"
-                        aria-describedby="basic-addon1" maxlength="255" required></textarea>
+                    <span class="input-group-text">
+                        <i class="bi bi-info-circle-fill" style="color: #a3a3a3;"></i>
+                    </span>
+                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="255"
+                        required></textarea>
                 </div>
             </div>
 
+            <!-- Imágenes del proyecto -->
             <div class="mb-3">
-                <label for="basic-url" class="form-label">Ingrese imagenes para el proyecto:</label>
+                <label for="imagenesProyecto" class="form-label">Imágenes del proyecto:</label>
                 <div class="input-group">
-                    <label class="input-group-text" for="imagenesProyecto">
+                    <span class="input-group-text">
                         <i class="bi bi-file-earmark-arrow-up-fill" style="color: #a3a3a3;"></i>
-                    </label>
-                    <input class="form-control" type="file" id="imagenesProyecto" name="imagenesProyecto" multiple required>
+                    </span>
+                    <input type="file" class="form-control" id="imagenesProyecto" name="archivos[]" multiple required>
                 </div>
-                <!-- Contenedor para la vista previa -->
+
+                <!-- Vista previa de imágenes -->
                 <div id="vistaPrevia" class="mt-3">
-                    <!-- Aquí se cargará la vista previa de la imagen -->
+                    <!-- Aquí se mostrarán las vistas previas -->
                 </div>
             </div>
 
+            <!-- Botón principal -->
             <div class="conatainerBotonFormularioModal">
-                <button type="submit" value="Registrar" id="buttonRegistrarProyecto" class="butonAgregar">Agregar
-                    Proyecto</button>
+                <button type="submit" id="buttonRegistrarProyecto" class="butonAgregar">
+                    Agregar Proyecto
+                </button>
             </div>
-
         </form>
-
     </div>
 
+    <!-- Tabla para mostrar proyectos -->
     <div class="header_fixed" id="containertabla">
         <table>
             <thead>
                 <tr>
                     <th>Acciones</th>
                     <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Fecha De Modificacion</th>
-                    <th>Imagen</th>
+                    <th>Descripción</th>
+                    <th>Última Modificación</th>
+                    <th>Imágenes</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Aquí se llenarán los datos de las proyectos -->
+                <!-- Se llena dinámicamente por JS -->
             </tbody>
         </table>
     </div>
-
 </div>
 
-<script src="public/js/Proyectos.js?6"></script>
+<!-- JavaScript del módulo de proyectos -->
+<script src="public/js/Proyectos.js?7"></script>
 
-<?php
-include('public/footer.php');
-?>
+<?php include('public/footer.php'); ?>
