@@ -15,11 +15,11 @@
 	<link rel="stylesheet" href="public/css/footer.css?17">
 	<link rel="stylesheet" href="public/css/inicio.css?9">
 	<link rel="stylesheet" href="public/css/sobreNosotros.css?27">
-	<link rel="stylesheet" href="public/css/noticias.css?6">
+	<link rel="stylesheet" href="public/css/noticias.css?7">
 	<link rel="stylesheet" href="public/css/noticiasAdministrador.css?87">
-	<link rel="stylesheet" href="public/css/herramientas.css">
+	<link rel="stylesheet" href="public/css/herramientas.css?6">
 	<link rel="stylesheet" href="public/css/herramientasAdministrador.css?1">
-	<link rel="stylesheet" href="public/css/contacto.css?30">
+	<link rel="stylesheet" href="public/css/contacto.css?31">
 	<link rel="stylesheet" href="public/css/login.css?7">
 	<link rel="stylesheet" href="public/css/usuarios.css?10">
 	<link rel="stylesheet" href="public/css/actividades.css?7">

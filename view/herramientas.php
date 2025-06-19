@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<script src="public/js/herramientasFrontEnd.js?8"></script>
+<script src="public/js/herramientasFrontEnd.js?9"></script>
 
 <?php
 include('public/footer.php');

@@ -30,6 +30,7 @@
 
 
 .noticias-items{
+    margin-top: 50px;
     width: 100%; 
 }
 
@@ -37,7 +38,12 @@
     display: flex;
     width: 100%; 
     margin-bottom: 100px;
-    /* background-color: pink; */
+    
+
+    background-color: rgba(214, 231, 252, 0.068);
+    border-radius: 15px;
+    padding: 30px 5px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
  
 .noticia-item-archivos{

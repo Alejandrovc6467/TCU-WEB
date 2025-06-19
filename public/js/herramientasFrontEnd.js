@@ -101,7 +101,7 @@ function crearHerramientaConVideo(herramienta) {
         <div class="herramienta-item" data-herramienta-id="${herramienta.id}">
             <div class="herramienta-item-archivos">
                 <div class="herramienta-video-container">
-                    <video width="430" controls preload="metadata">
+                    <video width="250" controls preload="metadata">
                         <source src="${videoUrl}" type="video/mp4">
                         Your browser does not support HTML video.
                     </video>
