@@ -1,13 +1,11 @@
 // Llamado de la funcion para cargar las herramientas el frontend de usuario normal
 function obtenerHerramientasParaFrontEndUsuario() {
-    console.log('Voy a cargar las herramientas para el frontend de usuario normal');
 
     $.ajax({
         type: "POST",
         url: "?controlador=Herramientas&accion=obtenerHerramientas",
         dataType: "json",
         success: function (response) {
-            console.log(response);
             // Limpiar el contenedor de herramientas
             $('.herramientas-items').empty();
 

@@ -13,16 +13,14 @@ class NoticiaModel
 
     public function obtenerNoticias()
     {
-        $consulta = $this->db->query('CALL sp_obtenerNoticias()');
+        $consulta = $this->db->query('SELECT n.id AS id_noticia, n.nombre, n.descripcion, n.fecha, n.tipo, a.id AS id_archivo, a.url_archivo FROM noticias n LEFT JOIN noticia_archivo na ON n.id = na.id_noticia LEFT JOIN archivo a ON na.id_archivo = a.id AND a.eliminado = FALSE WHERE n.eliminado = FALSE ORDER BY n.fecha DESC;');
+
         $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Estructura para agrupar noticias con sus archivos
         $noticias = [];
-        
+
         foreach ($resultado as $fila) {
             $idNoticia = $fila['id_noticia'];
-            
-            // Si la noticia no existe en el array, la agregamos
+
             if (!isset($noticias[$idNoticia])) {
                 $noticias[$idNoticia] = [
                     'id' => $idNoticia,
@@ -33,8 +31,7 @@ class NoticiaModel
                     'archivos' => []
                 ];
             }
-            
-            // Si hay un archivo asociado (id_archivo no es NULL), lo agregamos
+
             if ($fila['id_archivo'] !== null) {
                 $noticias[$idNoticia]['archivos'][] = [
                     'id' => $fila['id_archivo'],
@@ -42,68 +39,139 @@ class NoticiaModel
                 ];
             }
         }
-        
-        // Convertir a array indexado para el JSON
+
         return array_values($noticias);
     }
 
     public function eliminarNoticia($id)
     {
-        $consulta = $this->db->prepare('CALL sp_eliminarNoticia(?)');
-        $consulta->bindParam(1, $id);
-        $consulta->execute();
-        $resultado = $consulta->fetchAll(); // Aquí se captura el mensaje del SP
-        $consulta->closeCursor();
-        return $resultado;
+        try {
+            $this->db->beginTransaction();
+
+            // Marcar archivos asociados como eliminados
+            $consulta = $this->db->prepare('UPDATE archivo SET eliminado = TRUE WHERE id IN (SELECT id_archivo FROM noticia_archivo WHERE id_noticia = ?)');
+            $consulta->execute([$id]);
+
+            // Marcar noticia como eliminada
+            $consulta = $this->db->prepare('UPDATE noticias SET eliminado = TRUE WHERE id = ?');
+            $consulta->execute([$id]);
+
+            $this->db->commit();
+            return [['mensaje' => 'La noticia y sus archivos fueron eliminados correctamente.']];
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return [['mensaje' => 'Ocurrió un error al eliminar la noticia.']];
+        }
     }
 
     public function insertarNoticia($nombre, $descripcion, $tipo, $id_usuario, $archivos_guardados)
     {
-        // Convertir array de rutas a string separado por comas
-        $urls_concatenadas = implode(',', $archivos_guardados);
+        try {
+            // Convertir a array si es string
+            $archivos = is_string($archivos_guardados) ? explode(',', $archivos_guardados) : $archivos_guardados;
 
-        $consulta = $this->db->prepare('CALL sp_ingresarNoticia(?, ?, ?, ?, ?)');
-        $consulta->bindParam(1, $nombre);
-        $consulta->bindParam(2, $descripcion);
-        $consulta->bindParam(3, $tipo);
-        $consulta->bindParam(4, $id_usuario);
-        $consulta->bindParam(5, $urls_concatenadas);
-        $consulta->execute();
+            if (!is_array($archivos)) {
+                return [['mensaje' => 'Formato de archivos inválido.']];
+            }
 
-        $resultado = $consulta->fetchAll();
-        $consulta->closeCursor();
-        return $resultado[0]['mensaje'];
+            $this->db->beginTransaction();
+
+            // Insertar la noticia principal
+            $consulta = $this->db->prepare('INSERT INTO noticias (nombre, descripcion, tipo, fecha, id_usuario) VALUES (?, ?, ?, NOW(), ?)');
+            $consulta->execute([$nombre, $descripcion, $tipo, $id_usuario]);
+
+            $id_noticia = $this->db->lastInsertId();
+
+            // Insertar archivos y sus relaciones
+            $consultaArchivo = $this->db->prepare('INSERT INTO archivo (url_archivo) VALUES (?)');
+            $consultaRelacion = $this->db->prepare('INSERT INTO noticia_archivo (id_noticia, id_archivo) VALUES (?, ?)');
+
+            foreach ($archivos as $url) {
+                $url_limpia = trim($url);
+                if (!empty($url_limpia)) {
+                    $consultaArchivo->execute([$url_limpia]);
+                    $id_archivo = $this->db->lastInsertId();
+                    $consultaRelacion->execute([$id_noticia, $id_archivo]);
+                }
+            }
+
+            $this->db->commit();
+            return [['mensaje' => 'Se agregó la noticia correctamente.']];
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return [['mensaje' => 'Ocurrió un error al insertar la noticia.']];
+        }
     }
 
     public function actualizarNoticiaSinNuevosArchivos($id, $nombre, $descripcion, $id_usuario)
     {
-        $consulta = $this->db->prepare('CALL sp_actualizarNoticiaSinNuevosArchivos(?, ?, ?, ?)');
-        $consulta->bindParam(1, $id);
-        $consulta->bindParam(2, $nombre);
-        $consulta->bindParam(3, $descripcion);
-        $consulta->bindParam(4, $id_usuario);
-        $consulta->execute();
+        try {
+            // Verificar si la noticia existe
+            $consulta = $this->db->prepare('SELECT COUNT(*) FROM noticias WHERE id = ?');
+            $consulta->execute([$id]);
+            $existe = $consulta->fetchColumn();
 
-        $resultado = $consulta->fetchAll();
-        $consulta->closeCursor();
-        return $resultado;
+            if ($existe == 0) {
+                return [['mensaje' => 'Error: La noticia no existe.']];
+            }
+
+            $this->db->beginTransaction();
+
+            // Actualizar la noticia
+            $consulta = $this->db->prepare('UPDATE noticias SET nombre = ?, descripcion = ?, id_usuario = ?, fecha = NOW() WHERE id = ?');
+            $consulta->execute([$nombre, $descripcion, $id_usuario, $id]);
+
+            $this->db->commit();
+            return [['mensaje' => 'Actualización exitosa.']];
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return [['mensaje' => 'Ocurrió un error durante la actualización.']];
+        }
     }
 
-    public function actualizarNoticiaConNuevosArchivos($id, $nombre, $descripcion, $id_usuario, $urls_concatenadas)
+    public function actualizarNoticiaConNuevosArchivos($id, $nombre, $descripcion, $id_usuario, $archivos_guardados)
     {
-        $consulta = $this->db->prepare('CALL sp_actualizarNoticiaConNuevosArchivos(?, ?, ?, ?, ?)');
-        $consulta->bindParam(1, $id);
-        $consulta->bindParam(2, $nombre);
-        $consulta->bindParam(3, $descripcion);
-        $consulta->bindParam(4, $id_usuario);
-        $consulta->bindParam(5, $urls_concatenadas);
-        $consulta->execute();
+        try {
+            // Convertir a array si es string
+            $archivos = is_string($archivos_guardados) ? explode(',', $archivos_guardados) : $archivos_guardados;
 
-        $resultado = $consulta->fetchAll();
-        $consulta->closeCursor();
-        return $resultado;
+            if (!is_array($archivos)) {
+                return [['mensaje' => 'Formato de archivos inválido.']];
+            }
 
+            $this->db->beginTransaction();
+
+            // Actualizar datos básicos de la noticia
+            $consulta = $this->db->prepare('UPDATE noticias SET nombre = ?, descripcion = ?, id_usuario = ?, fecha = NOW() WHERE id = ?');
+            $consulta->execute([$nombre, $descripcion, $id_usuario, $id]);
+
+            // Marcar archivos antiguos como eliminados
+            $consulta = $this->db->prepare('UPDATE archivo SET eliminado = TRUE WHERE id IN (SELECT id_archivo FROM noticia_archivo WHERE id_noticia = ?)');
+            $consulta->execute([$id]);
+
+            // Eliminar relaciones antiguas
+            $consulta = $this->db->prepare('DELETE FROM noticia_archivo WHERE id_noticia = ?');
+            $consulta->execute([$id]);
+
+            // Insertar nuevos archivos y relaciones
+            $consultaArchivo = $this->db->prepare('INSERT INTO archivo (url_archivo) VALUES (?)');
+            $consultaRelacion = $this->db->prepare('INSERT INTO noticia_archivo (id_noticia, id_archivo) VALUES (?, ?)');
+
+            foreach ($archivos as $url) {
+                $url_limpia = trim($url);
+                if (!empty($url_limpia)) {
+                    $consultaArchivo->execute([$url_limpia]);
+                    $id_archivo = $this->db->lastInsertId();
+                    $consultaRelacion->execute([$id, $id_archivo]);
+                }
+            }
+
+            $this->db->commit();
+            return [['mensaje' => 'Actualización exitosa.']];
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return [['mensaje' => 'Ocurrió un error durante la actualización.']];
+        }
     }
-
 
 }

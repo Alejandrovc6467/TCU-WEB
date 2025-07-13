@@ -7,7 +7,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 <nav class="navbar" id="navbar">
   <div class="navbar-logo">
-    <img src="public/assets/logo03.png" alt="Logo">
+    <img src="public/assets/logo.webp" alt="Logo">
   </div>
   <div class="navbar-links" id="navbar-links">
 

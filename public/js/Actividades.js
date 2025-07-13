@@ -43,7 +43,7 @@ function obtenerActividades() {
                 // Columna de acciones
                 var accionesCell = $("<td>");
                 var editarBtn = $("<button>")
-                    .html('<span class="material-icons">edit_document</span> ') 
+                    .html('<span class="material-icons">edit_document</span> ')
                     .addClass("butonEditar")
                     .data("id", actividad.id)
                     .data("url_archivo", actividad.url_archivo)
@@ -59,7 +59,7 @@ function obtenerActividades() {
                     });
 
                 var eliminarBtn = $("<button>")
-                    .html('<span class="material-icons">cancel</span> ') 
+                    .html('<span class="material-icons">cancel</span> ')
                     .addClass("butonDelete")
                     .data("id", actividad.id)
                     .on("click", function () {
@@ -107,7 +107,6 @@ function agregarActividad() {
     form_data.append("descripcion", descripcion); // Agregar la descripción
     form_data.append("archivo", imagen); // Agregar la imagen (archivo)
 
-    console.log(form_data);
     $.ajax({
         url: "?controlador=Actividades&accion=agregarActividad",
         type: "POST",
@@ -116,25 +115,24 @@ function agregarActividad() {
         processData: false, // No procesar los datos automáticamente
         contentType: false, // Dejar que el navegador configure el tipo de contenido
         success: function (response) {
-            console.log(response);
 
             // Habilitar el botón después de recibir la respuesta del servidor
             document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
 
-            if (response[0]["mensaje"] === "Actividad ingresada con exito.") {
+            if (response[0]["message"] === "Actividad ingresada con éxito.") {
                 limpiarCamposFormulario();
 
                 Swal.fire({
                     icon: 'success',
                     title: '¡Genial!',
-                    text: response[0]["mensaje"],
+                    text: response[0]["message"],
                     confirmButtonColor: '#088cff'
                 });
-            } else if (response[0]["mensaje"].includes("Ocurrió un error")) {
+            } else if (response[0]["message"].includes("Ocurrió un error")) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: response[0]["mensaje"],
+                    text: response[0]["message"],
                     confirmButtonColor: '#088cff'
                 });
             } else {
@@ -165,7 +163,7 @@ function editarActividad(id, url_archivo, nombre, descripcion) {
 
     //Eliminar el boton de cancel en caso de que ya exista uno, para agregar el nuevo
     const cancelEditButtonAnterior = document.getElementById('cancelEditButton');
-       if (cancelEditButtonAnterior) {
+    if (cancelEditButtonAnterior) {
         cancelEditButtonAnterior.remove();
     }
 
@@ -234,7 +232,6 @@ function actualizarActividad() {
     form_data.append("descripcion", descripcion); // Agregar la descripción
     form_data.append("archivo", imagen); // Agregar la imagen (archivo)
 
-    console.log(form_data);
     $.ajax({
         url: "?controlador=Actividades&accion=modificarActividad",
         type: "POST",
@@ -243,7 +240,6 @@ function actualizarActividad() {
         processData: false, // No procesar los datos automáticamente
         contentType: false, // Dejar que el navegador configure el tipo de contenido
         success: function (response) {
-            console.log(response);
 
             // Habilitar el botón
             document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
@@ -287,7 +283,7 @@ function actualizarActividad() {
         },
         error: function (xhr, status, error) {
             console.log(error, xhr, status);
-            
+
             // Habilitar el botón en caso de error
             document.getElementById('agregarActividad').querySelector('button[type="submit"]').disabled = false;
 
@@ -314,7 +310,6 @@ function eliminarActividad(id) {
                 data: { id: id },
                 dataType: "json",
                 success: function (response) {
-                    console.log(response);
                     if (response[0]["mensaje"] === 'Actividad eliminada exitosamente.') {
                         Swal.fire({
                             icon: 'success',

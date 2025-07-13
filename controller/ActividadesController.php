@@ -86,12 +86,19 @@ class ActividadesController
                     die("Error: ID de usuario no está configurado en la sesión.");
                 }
 
-                $respuesta = $this->insertarActividad(
+                $mensaje = $this->insertarActividad(
                     $rutaDestino,
                     $_POST['nombre'],
                     $_POST['descripcion'],
                     $id_usuario
                 );
+
+                $respuesta = [
+                    [
+                        'message' => $mensaje,
+                        '0' => $mensaje
+                    ]
+                ];
 
             } else {
                 $respuesta = [

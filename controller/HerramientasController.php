@@ -54,17 +54,17 @@ class HerramientasController
     {
         require 'model/HerramientaModel.php';
         $herramientaModel = new HerramientaModel();
-    
+
         $respuesta = $herramientaModel->eliminarHerramienta($_POST['id']);
-    
+
         // Extraer mensaje (asumiendo que es lo único que retorna el SP)
         $mensaje = isset($respuesta[0]['mensaje']) ? $respuesta[0]['mensaje'] : 'Operación finalizada.';
-    
+
         header('Content-Type: application/json');
         echo json_encode(['mensaje' => $mensaje]);
         exit;
     }
-    
+
     public function agregarHerramienta()
     {
         // Verificar si se recibieron archivos
@@ -106,9 +106,7 @@ class HerramientasController
         $id_usuario = $_SESSION['id'];
 
         // Insertar la herramienta en la base de datos con los archivos subidos
-        $respuesta = $this->insertarHerramienta($_POST['nombre'], $_POST['descripcion'], $_POST['tipo'],  $id_usuario, $archivos_guardados);
-
-        $respuesta = [[ 'mensaje' => $respuesta ]];// quitar esto variable de prueba
+        $respuesta = $this->insertarHerramienta($_POST['nombre'], $_POST['descripcion'], $_POST['tipo'], $id_usuario, $archivos_guardados);
 
         //se devuelve el contenido de la respuesta como un json
         header('Content-Type: application/json');
@@ -135,7 +133,7 @@ class HerramientasController
 
     public function actualizarHerramientaSinNuevosArchivos()
     {
-       
+
         require 'model/HerramientaModel.php';
         $herramientaModel = new HerramientaModel();
 
@@ -155,9 +153,9 @@ class HerramientasController
             $_POST['id'],
             $_POST['nombre'],
             $_POST['descripcion'],
-            $id_usuario 
+            $id_usuario
         );
-        
+
         header('Content-Type: application/json');
         echo json_encode($respuesta);
         exit;
@@ -214,7 +212,6 @@ class HerramientasController
         echo json_encode($respuesta);
         exit;
     }
-
     private function insertarActualizacionDeHerramientaConNuevosArchivos($id, $nombre, $descripcion, $id_usuario, $urls_concatenadas)
     {
         require 'model/HerramientaModel.php';

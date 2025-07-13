@@ -1,13 +1,12 @@
 // Llamado de la funcion para cargar las noticias el frontend de usuario normal
 function obtenerNoticiasParaFrontEndUsuario() {
-    console.log('Voy a cargar las noticias para el frontend de usuario normal');
 
     $.ajax({
         type: "POST",
         url: "?controlador=Noticias&accion=obtenerNoticias",
         dataType: "json",
         success: function (response) {
-            console.log(response);
+
             // Limpiar el contenedor de noticias
             $('.noticias-items').empty();
             

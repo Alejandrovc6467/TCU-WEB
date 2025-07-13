@@ -27,10 +27,8 @@ document.getElementById("archivosNoticia")
     .addEventListener("change", function (event) {
 
         if(isEditMode){
-            console.log('cambio en iput de archivos en modo edicion');
             updateArchivos = true;
         }else{
-            console.log('cambio en iput de archivos en modo agregar');
             updateArchivos = false;
         }
         
@@ -162,7 +160,6 @@ function eliminarNoticia(id) {
                 data: { id: id },
                 dataType: "json",
                 success: function (response) {
-                    console.log(response);
                     Swal.fire({
                         icon: 'success',
                         title: 'Eliminado',
@@ -189,19 +186,10 @@ function eliminarNoticia(id) {
 // Función para agregar noticias nuevas
 function agregarNoticia() {
 
-    console.log('Preaionaste agregar noticia');
-
     // Se obtienen los valores introducidos en el formulario
     const nombre = document.getElementById("nombre").value.trim();
     const descripcion = document.getElementById("descripcion").value.trim();
     const archivos = document.getElementById("archivosNoticia").files;
-
-    // para pruebas en consola, borrar despues
-    console.log("nombre:", nombre);
-    console.log("descripcion:", descripcion);
-    console.log("Tipo de archivo seleccionado:", tipoArchivoSeleccionado);
-    console.log("Archivos:", archivos);
-    
     
     // Desactivar el botón mientras se procesa la solicitud AJAX
     document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
@@ -272,15 +260,9 @@ function agregarNoticia() {
 // Funcion para actualizar la noticia sin subir nuevos archivos
 function actualizarNoticiaSinNuevosArchivos(){
 
-    console.log('Voy a actualizar sin subir archivos');
-
     // Se obtienen los valores introducidos en el formulario
     const nombre = document.getElementById("nombre").value.trim();
     const descripcion = document.getElementById("descripcion").value.trim();
-   
-    console.log("ID de la noticia a editar:", editNoticiaId);
-    console.log("nombre:", nombre);
-    console.log("descripcion:", descripcion);
     
     // Desactivar el botón mientras se procesa la solicitud AJAX
     document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
@@ -349,17 +331,10 @@ function actualizarNoticiaSinNuevosArchivos(){
 // Funcion para actualizar la noticia y subir nuevos archivos
 function actualizarNoticiaConNuevosArchivos(){
 
-    console.log('Voy a actualizar y subir archivos nuevos');
-    
     // Se obtienen los valores introducidos en el formulario
     const nombre = document.getElementById("nombre").value.trim();
     const descripcion = document.getElementById("descripcion").value.trim();
     const archivos = document.getElementById("archivosNoticia").files;
-
-    console.log("nombre:", nombre);
-    console.log("descripcion:", descripcion);
-    console.log("Archivos:", archivos);
-    console.log("ID de la noticia a editar:", editNoticiaId);
 
     // Desactivar el botón mientras se procesa la solicitud AJAX
     document.getElementById('agregarNoticia').querySelector('button[type="submit"]').disabled = true;
@@ -444,7 +419,6 @@ document.querySelectorAll('input[name="tipoArchivo"]').forEach((radio) => {
 function handleTipoArchivoChange(event) {
 
     tipoArchivoSeleccionado = event.target.value;
-    console.log("Tipo de archivo seleccionado:", tipoArchivoSeleccionado);
 
     // Limpiar la vista previa anterior y el input de archivos, para evitar conflictos
     var vistaPrevia = document.getElementById("vistaPrevia");

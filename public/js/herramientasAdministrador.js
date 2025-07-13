@@ -155,7 +155,6 @@ function eliminarHerramienta(id) {
                 data: { id: id },
                 dataType: "json",
                 success: function (response) {
-                    console.log(response);
                     mostrarMensaje('success', 'Eliminado', response.mensaje);
                     obtenerHerramientas(); // Recargar la tabla después de eliminar
                 },

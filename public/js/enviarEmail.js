@@ -29,17 +29,12 @@ function enviarMensaje(){
         mensaje: mensaje
     };
 
-    console.log(form_data);
-
-    
     $.ajax({
         type: "POST",
         url: "phpmailer/enviarEmailContacto.php",
         data: form_data,
         dataType: "json",
         success: function (response) {
-
-            console.log(response);
 
             // Habilitar el botón después de recibir la respuesta del servidor
             document.getElementById('enviarMensajeContacto').querySelector('button[type="submit"]').disabled = false;

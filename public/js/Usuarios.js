@@ -105,7 +105,6 @@ function agregarUsuario(){
         data: form_data,
         dataType: "json",
         success: function (response) {
-            console.log(response);
 
             // Habilitar el botón después de recibir la respuesta del servidor
             document.getElementById('agregarUsuario').querySelector('button[type="submit"]').disabled = false;

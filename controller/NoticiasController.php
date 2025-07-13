@@ -109,9 +109,6 @@ class NoticiasController
         // Insertar la noticia en la base de datos con los archivos subidos
         $respuesta = $this->insertarNoticia($_POST['nombre'], $_POST['descripcion'], $_POST['tipo'],  $id_usuario, $archivos_guardados);
 
-        $respuesta = [[ 'mensaje' => $respuesta ]];// quitar esto variable de prueba
-
-
         //se devuelve el contenido de la respuesta como un json
         header('Content-Type: application/json');
         echo json_encode($respuesta);

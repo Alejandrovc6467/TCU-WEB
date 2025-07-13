@@ -13,17 +13,11 @@ class userModel
 
     public function login($correo, $contrasena)
     {
-        $consulta = $this->db->prepare('call sp_loginUsuario(?, ?)');
-        $consulta->bindParam(1, $correo);
-        $consulta->bindParam(2, $contrasena);
-        $consulta->execute();
+        $consulta = $this->db->prepare('SELECT id, nombre, correo, rol FROM usuario WHERE correo = ? AND contrasena = ? AND eliminado = 0;');
+        $consulta->execute([$correo, $contrasena]);
         $resultado = $consulta->fetchAll();
         $consulta->closeCursor();
         return $resultado;
     }
-
-   
-   
-
 
 }
